@@ -39,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: Stack(
+        // ignore: deprecated_member_use
         overflow: Overflow.visible,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         fit: StackFit.loose,
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     // Image(image: AssetImage('images/Currency.png')),
                     const SizedBox(
-                      height: 50,
+                      height: 32,
                     ),
                     const Text(
                       "Login",
