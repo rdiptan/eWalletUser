@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:e_wallet/theme.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,6 +39,15 @@ class _LoginPageState extends State<LoginPage> {
           // toolbarHeight: (MediaQuery.of(context).size.height * 0.2),
           elevation: 0,
           backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.brightness_6),
+              color: Colors.white,
+              onPressed: () {
+                Provider.of<ThemeProvider>(context, listen: false).swapTheme();
+              },
+            ),
+          ],
         ),
       ),
       body: Stack(
@@ -187,7 +199,11 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () => Navigator.pushNamed(context, 'registration'),
                       child: RichText(
                         text: const TextSpan(children: [
-                          WidgetSpan(child: Icon(Icons.unarchive)),
+                          WidgetSpan(
+                              child: Icon(
+                            Icons.unarchive,
+                            color: Colors.black,
+                          )),
                           TextSpan(
                               text: "I am a new user!!! ",
                               style: TextStyle(

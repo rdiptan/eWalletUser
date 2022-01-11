@@ -261,7 +261,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         onTap: () => Navigator.pushNamed(context, 'login'),
                         child: RichText(
                           text: const TextSpan(children: [
-                            WidgetSpan(child: Icon(Icons.login)),
+                            WidgetSpan(
+                                child: Icon(
+                              Icons.login,
+                              color: Colors.black,
+                            )),
                             TextSpan(
                                 text: "I have an account!!! ",
                                 style: TextStyle(
