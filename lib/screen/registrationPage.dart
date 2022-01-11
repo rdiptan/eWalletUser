@@ -47,12 +47,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: (MediaQuery.of(context).size.height),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
-                color: Color(0xFFF6F6F6),
+                color: Theme.of(context).accentColor,
               ),
               child: SingleChildScrollView(
                 padding:
@@ -65,12 +65,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       const SizedBox(
                         height: 32,
                       ),
-                      const Text(
+                      Text(
                         "Registration",
-                        textScaleFactor: 2,
-                        style: TextStyle(
-                            color: Color(0xFF105F49),
-                            fontWeight: FontWeight.w700),
+                        style: Theme.of(context).textTheme.headline1,
                       ),
                       const SizedBox(
                         height: 32,
@@ -82,7 +79,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         validator: MultiValidator(
                             [RequiredValidator(errorText: "* Required Field")]),
                         keyboardType: TextInputType.emailAddress,
-                        style: const TextStyle(fontSize: 18),
+                        style: Theme.of(context).textTheme.bodyText2,
                         decoration: InputDecoration(
                           hintText: "First Name",
                           fillColor: Colors.white,
@@ -118,7 +115,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         validator: MultiValidator(
                             [RequiredValidator(errorText: "* Required Field")]),
                         keyboardType: TextInputType.emailAddress,
-                        style: const TextStyle(fontSize: 18),
+                        style: Theme.of(context).textTheme.bodyText2,
                         decoration: InputDecoration(
                           hintText: "Last Name",
                           fillColor: Colors.white,
@@ -156,7 +153,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           RequiredValidator(errorText: "* Required Field")
                         ]),
                         keyboardType: TextInputType.emailAddress,
-                        style: const TextStyle(fontSize: 18),
+                        style: Theme.of(context).textTheme.bodyText2,
                         decoration: InputDecoration(
                           hintText: "Email",
                           fillColor: Colors.white,
@@ -194,7 +191,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               errorText: "Minium 8 Character Required"),
                           RequiredValidator(errorText: "* Required Field")
                         ]),
-                        style: const TextStyle(fontSize: 18),
+                        style: Theme.of(context).textTheme.bodyText2,
                         obscureText: _obscureText,
                         decoration: InputDecoration(
                           hintText: "Password",
@@ -251,17 +248,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             ).show(context);
                           }
                         },
-                        style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16),
-                            minimumSize: const Size(double.infinity, 50),
-                            elevation: 10,
-                            primary: Colors.green,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16))),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.w600),
+                        style: Theme.of(context).elevatedButtonTheme.style,
+                        child: Text(
+                          "Registration",
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                       const SizedBox(
