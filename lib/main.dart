@@ -1,5 +1,7 @@
+import 'package:e_wallet/screen/homePage.dart';
 import 'package:e_wallet/screen/loginPage.dart';
 import 'package:e_wallet/screen/registrationPage.dart';
+import 'package:e_wallet/screen/validationPage.dart';
 import 'package:e_wallet/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,10 +32,12 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
           title: 'eWallet',
           theme: value.getTheme(),
-          initialRoute: 'login',
+          initialRoute: '/',
           routes: {
+            '/': (context) => const ValidationPage(),
             'login': (context) => const LoginPage(),
-            'registration': (context) => const RegistrationPage()
+            'registration': (context) => const RegistrationPage(),
+            'home': (context) => const HomePage(),
           });
     });
   }

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:e_wallet/http/httpUser.dart';
 import 'package:provider/provider.dart';
 import 'package:e_wallet/theme.dart';
 
@@ -24,6 +24,11 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  Future<String?> loginUser(String email, String password) {
+    var res = HttpConnectUser().loginUser(email, password);
+    return res;
   }
 
   @override
@@ -126,11 +131,8 @@ class _LoginPageState extends State<LoginPage> {
                       onSaved: (value) {
                         password = value;
                       },
-                      validator: MultiValidator([
-                        MinLengthValidator(8,
-                            errorText: "Minium 8 Character Required"),
-                        RequiredValidator(errorText: "* Required Field")
-                      ]),
+                      validator: MultiValidator(
+                          [RequiredValidator(errorText: "* Required Field")]),
                       style: Theme.of(context).textTheme.bodyText2,
                       obscureText: _obscureText,
                       decoration: InputDecoration(
@@ -172,18 +174,34 @@ class _LoginPageState extends State<LoginPage> {
                       height: 16,
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                        } else {
-                          MotionToast.error(
-                            description: const Text("something is wrong"),
-                            title: const Text(
-                              "error",
-                              style: TextStyle(fontSize: 16, color: Colors.red),
-                            ),
-                            toastDuration: const Duration(seconds: 3),
-                          ).show(context);
+                          print(email);
+                          print(password);
+                          String? loggedin = await loginUser(email!, password!);
+                          if (loggedin == "true") {
+                            Navigator.pushReplacementNamed(context, 'home');
+                            MotionToast.success(
+                              description: Text(loggedin!),
+                              title: const Text(
+                                "success",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.green),
+                              ),
+                              toastDuration: const Duration(seconds: 3),
+                            ).show(context);
+                          } else {
+                            MotionToast.error(
+                              description: Text(loggedin!),
+                              title: const Text(
+                                "error",
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.red),
+                              ),
+                              toastDuration: const Duration(seconds: 3),
+                            ).show(context);
+                          }
                         }
                       },
                       style: Theme.of(context).elevatedButtonTheme.style,
@@ -221,14 +239,15 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Positioned(
-              // top: -160,
-              top: -(MediaQuery.of(context).size.height / 4.75),
-              left: (MediaQuery.of(context).size.height / 15),
-              child: Image.asset(
-                'images/Currency.png',
-                fit: BoxFit.contain,
-                height: (MediaQuery.of(context).size.height * 0.25),
-              )),
+            // top: -160,
+            top: -(MediaQuery.of(context).size.height / 4.75),
+            left: (MediaQuery.of(context).size.height / 15),
+            child: Image.asset(
+              'images/Currency.png',
+              fit: BoxFit.contain,
+              height: (MediaQuery.of(context).size.height * 0.25),
+            ),
+          ),
         ],
       ),
     );

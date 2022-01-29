@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:e_wallet/http/httpUser.dart';
+import 'package:e_wallet/model/user.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -23,6 +25,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  Future<String?> registerUser(User user) {
+    var res = HttpConnectUser().registerUser(user);
+    return res;
   }
 
   @override
@@ -110,7 +117,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       TextFormField(
                         onSaved: (value) {
-                          fname = value;
+                          lname = value;
                         },
                         validator: MultiValidator(
                             [RequiredValidator(errorText: "* Required Field")]),
@@ -187,8 +194,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           password = value;
                         },
                         validator: MultiValidator([
-                          MinLengthValidator(8,
-                              errorText: "Minium 8 Character Required"),
+                          // MinLengthValidator(8,
+                          //     errorText: "Minium 8 Character Required"),
                           RequiredValidator(errorText: "* Required Field")
                         ]),
                         style: Theme.of(context).textTheme.bodyText2,
@@ -233,19 +240,39 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 16,
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                          } else {
-                            MotionToast.error(
-                              description: const Text("something is wrong"),
-                              title: const Text(
-                                "error",
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.red),
-                              ),
-                              toastDuration: const Duration(seconds: 3),
-                            ).show(context);
+
+                            User user = User(
+                              fname: fname,
+                              lname: lname,
+                              email: email,
+                              password: password,
+                            );
+                            String? registered = await registerUser(user);
+                            if (registered == "true") {
+                              Navigator.pushReplacementNamed(context, 'home');
+                              MotionToast.success(
+                                description: Text(registered!),
+                                title: const Text(
+                                  "success",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.green),
+                                ),
+                                toastDuration: const Duration(seconds: 3),
+                              ).show(context);
+                            } else {
+                              MotionToast.error(
+                                description: Text(registered!),
+                                title: const Text(
+                                  "error",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.red),
+                                ),
+                                toastDuration: const Duration(seconds: 3),
+                              ).show(context);
+                            }
                           }
                         },
                         style: Theme.of(context).elevatedButtonTheme.style,
