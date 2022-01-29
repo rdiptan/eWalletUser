@@ -1,8 +1,8 @@
 import 'package:e_wallet/screen/homePage.dart';
-import 'package:e_wallet/screen/loginPage.dart';
-import 'package:e_wallet/screen/registrationPage.dart';
-import 'package:e_wallet/screen/validationPage.dart';
-import 'package:e_wallet/theme.dart';
+import 'package:e_wallet/auth/loginPage.dart';
+import 'package:e_wallet/auth/registrationPage.dart';
+import 'package:e_wallet/auth/validationPage.dart';
+import 'package:e_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';

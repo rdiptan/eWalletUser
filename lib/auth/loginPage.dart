@@ -5,7 +5,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:e_wallet/http/httpUser.dart';
 import 'package:provider/provider.dart';
-import 'package:e_wallet/theme.dart';
+import 'package:e_wallet/utils/theme.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -177,8 +177,6 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          print(email);
-                          print(password);
                           String? loggedin = await loginUser(email!, password!);
                           if (loggedin == "true") {
                             Navigator.pushReplacementNamed(context, 'home');
