@@ -1,9 +1,10 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:e_wallet/model/user.dart';
 import 'package:e_wallet/response/user_auth_resp.dart';
 
@@ -24,7 +25,7 @@ class HttpConnectUser {
         body: jsonEncode(userMap));
     if (response.statusCode == 200) {
       final loginResponse = await loginUser(user.email!, user.password!);
-      if (loginResponse == "User Logged in!") {
+      if (loginResponse == "true") {
         return 'true';
       } else {
         return loginResponse;

@@ -5,7 +5,10 @@ import 'package:e_wallet/page/bill_split.dart';
 import 'package:e_wallet/page/home.dart';
 import 'package:e_wallet/page/profile.dart';
 import 'package:e_wallet/page/qr.dart';
-import 'package:e_wallet/page/transaction.dart';
+import 'package:e_wallet/page/transactionPage.dart';
+
+import 'package:e_wallet/http/httpUser.dart';
+import 'package:e_wallet/model/user.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   int currentTab = 0;
   final List<Widget> screens = [
     Home(),
-    Transaction(),
+    TransactionPage(),
     QRPage(),
     BillSplit(),
     Profile()
@@ -81,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 // minWidth: 50,
                 onPressed: () {
                   setState(() {
-                    currentScreen = Transaction();
+                    currentScreen = TransactionPage();
                     currentTab = 1;
                   });
                 },
