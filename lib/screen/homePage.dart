@@ -7,9 +7,6 @@ import 'package:e_wallet/page/profile.dart';
 import 'package:e_wallet/page/qr.dart';
 import 'package:e_wallet/page/transactionPage.dart';
 
-import 'package:e_wallet/http/httpUser.dart';
-import 'package:e_wallet/model/user.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 

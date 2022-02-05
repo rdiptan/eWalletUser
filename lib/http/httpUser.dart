@@ -3,10 +3,13 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:e_wallet/model/user.dart';
+import 'package:e_wallet/model/userDetails.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:e_wallet/model/user.dart';
+import 'package:e_wallet/utils/load_token.dart';
 import 'package:e_wallet/response/user_auth_resp.dart';
+import 'package:e_wallet/response/user_data_resp.dart';
 
 class HttpConnectUser {
   String baseurl = "http://10.0.2.2:90/";
@@ -60,5 +63,26 @@ class HttpConnectUser {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', token);
     print('token saved locally');
+  }
+
+  Future<UserDetails> getUser() async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+    final response =
+        await http.get(Uri.parse(baseurl + 'user/profile'), headers: {
+      'Authorization': authToken,
+    });
+    print(authToken);
+    print(response.statusCode);
+    print((response.body));
+    if (response.statusCode == 200) {
+      var processedResponse =
+          ResponseGetUser.fromJson(jsonDecode(response.body));
+      print('entered');
+      print(processedResponse.data);
+      return processedResponse.data;
+    } else {
+      return UserDetails();
+    }
   }
 }

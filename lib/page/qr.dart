@@ -3,6 +3,7 @@ import 'package:e_wallet/model/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:slide_to_confirm/slide_to_confirm.dart';
 
 class QRPage extends StatefulWidget {
   const QRPage({Key? key}) : super(key: key);
@@ -17,6 +18,14 @@ class _QRState extends State<QRPage> {
   String? amount;
   String? category;
   String? reason;
+
+  List<String> listOfValue = [
+    'Food',
+    'Travel',
+    'Shopping',
+    'Entertainment',
+    'Others',
+  ];
 
   Future<String?> newTransaction(Transaction transaction) {
     var res = HttpConnectTransaction().newTransaction(transaction);
@@ -95,14 +104,15 @@ class _QRState extends State<QRPage> {
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              DropdownButtonFormField(
                 onSaved: (value) {
-                  category = value;
+                  category = value as String?;
                 },
                 validator: MultiValidator([
                   RequiredValidator(errorText: "* Required Field"),
                 ]),
                 style: Theme.of(context).textTheme.bodyText2,
+                dropdownColor: const Color(0xFF105F49),
                 decoration: InputDecoration(
                   hintText: "Category",
                   fillColor: Colors.white,
@@ -121,6 +131,19 @@ class _QRState extends State<QRPage> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
+                items: listOfValue.map((String val) {
+                  return DropdownMenuItem(
+                    value: val,
+                    child: Text(
+                      val,
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    category = value;
+                  });
+                },
               ),
               const SizedBox(
                 height: 16,
@@ -155,9 +178,10 @@ class _QRState extends State<QRPage> {
               const SizedBox(
                 height: 16,
               ),
-              ElevatedButton(
-                onPressed: () async {
+              ConfirmationSlider(
+                onConfirmation: () async {
                   if (_formKey.currentState!.validate()) {
+                    print('Slider confirmed!');
                     _formKey.currentState!.save();
 
                     Transaction transaction = Transaction(
@@ -190,10 +214,14 @@ class _QRState extends State<QRPage> {
                     }
                   }
                 },
-                style: Theme.of(context).elevatedButtonTheme.style,
-                child: Text(
-                  "Send Money",
-                  style: Theme.of(context).textTheme.bodyText1,
+                // width: double.infinity,
+                text: 'Slide to Pay',
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF105F49),
+                textStyle: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ],
