@@ -39,7 +39,6 @@ class _LoginPageState extends State<LoginPage> {
             Size.fromHeight(MediaQuery.of(context).size.height * 0.21),
         child: AppBar(
           automaticallyImplyLeading: false,
-          // toolbarHeight: (MediaQuery.of(context).size.height * 0.2),
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
@@ -62,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child: SingleChildScrollView(
               padding: EdgeInsets.all(MediaQuery.of(context).size.height / 32),
-              // padding: EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(

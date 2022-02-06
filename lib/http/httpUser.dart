@@ -70,16 +70,12 @@ class HttpConnectUser {
     String authToken = 'Bearer $futureToken';
     final response =
         await http.get(Uri.parse(baseurl + 'user/profile'), headers: {
+      'Content-Type': 'application/json',
       'Authorization': authToken,
     });
-    print(authToken);
-    print(response.statusCode);
-    print((response.body));
     if (response.statusCode == 200) {
       var processedResponse =
           ResponseGetUser.fromJson(jsonDecode(response.body));
-      print('entered');
-      print(processedResponse.data);
       return processedResponse.data;
     } else {
       return UserDetails();

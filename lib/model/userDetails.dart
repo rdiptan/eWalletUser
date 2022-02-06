@@ -1,30 +1,4 @@
-// ignore_for_file: file_names
-
-// import 'package:json_annotation/json_annotation.dart';
-
-// part 'userDetails.g.dart';
-
-// @JsonSerializable()
-// class UserDetails {
-//   @JsonKey(name: "_id")
-//   String? id;
-//   Map? user;
-//   bool? isVerified;
-//   num? balance;
-//   String? citizenshipProof;
-
-//   UserDetails(
-//       {this.id,
-//       this.user,
-//       this.isVerified,
-//       this.balance,
-//       this.citizenshipProof});
-
-//   factory UserDetails.fromJson(Map<String, dynamic> json) =>
-//       _$UserDetailsFromJson(json);
-
-//   Map<String, dynamic> toJson() => _$UserDetailsToJson(this);
-// }
+// ignore_for_file: file_names, unnecessary_this, unnecessary_new, prefer_collection_literals
 
 import 'package:e_wallet/model/user.dart';
 

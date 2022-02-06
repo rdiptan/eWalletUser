@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:e_wallet/model/tranactionDetails.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_wallet/utils/load_token.dart';
 import 'package:e_wallet/model/transaction.dart';
@@ -31,6 +32,42 @@ class HttpConnectTransaction {
     } else {
       var userResponse = jsonDecode(response.body);
       return userResponse['msg'];
+    }
+  }
+
+  Future<TransactionDetails> getTransaction() async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+
+    final response =
+        await http.get(Uri.parse(baseurl + 'transaction/view'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': authToken,
+    });
+    if (jsonDecode(response.body)['success'] == true) {
+      var transactionResponse = jsonDecode(response.body);
+      return TransactionDetails.fromJson(transactionResponse);
+    } else {
+      var transactionResponse = jsonDecode(response.body);
+      return transactionResponse['msg'];
+    }
+  }
+
+  Future<TransactionDetails> getTransactionById(String id) async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+
+    final response =
+        await http.get(Uri.parse(baseurl + 'transaction/view/' + id), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': authToken,
+    });
+    if (jsonDecode(response.body)['success'] == true) {
+      var transactionResponse = jsonDecode(response.body);
+      return TransactionDetails.fromJson(transactionResponse);
+    } else {
+      var transactionResponse = jsonDecode(response.body);
+      return transactionResponse['msg'];
     }
   }
 }
