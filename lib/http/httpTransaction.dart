@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:e_wallet/model/tranactionDetails.dart';
+import 'package:e_wallet/response/transaction_details_resp.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_wallet/utils/load_token.dart';
 import 'package:e_wallet/model/transaction.dart';
@@ -35,7 +36,7 @@ class HttpConnectTransaction {
     }
   }
 
-  Future<TransactionDetails> getTransaction() async {
+  Future getTransaction() async {
     String? futureToken = await loadToken();
     String authToken = 'Bearer $futureToken';
 
@@ -45,8 +46,9 @@ class HttpConnectTransaction {
       'Authorization': authToken,
     });
     if (jsonDecode(response.body)['success'] == true) {
-      var transactionResponse = jsonDecode(response.body);
-      return TransactionDetails.fromJson(transactionResponse);
+      var transactionResponse =
+          TransactionDetailsResp.fromJson(jsonDecode(response.body));
+      return transactionResponse.data;
     } else {
       var transactionResponse = jsonDecode(response.body);
       return transactionResponse['msg'];
