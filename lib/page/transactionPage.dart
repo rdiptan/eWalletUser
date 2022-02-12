@@ -38,11 +38,33 @@ class _TransactionPageState extends State<TransactionPage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize:
-            Size.fromHeight(MediaQuery.of(context).size.height * 0.21),
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.175),
         child: AppBar(
           automaticallyImplyLeading: false,
+          toolbarHeight: (MediaQuery.of(context).size.height),
           elevation: 0,
           backgroundColor: Colors.transparent,
+          centerTitle: true,
+          title: Container(
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.5),
+                width: 2,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text("Total Balance"),
+                SizedBox(height: 10),
+                Text("Rs. 45,000"),
+              ],
+            ),
+          ),
         ),
       ),
       body: Container(
@@ -61,9 +83,23 @@ class _TransactionPageState extends State<TransactionPage> {
             key: _formKey,
             child: Column(
               children: [
-                const SizedBox(
-                  height: 32,
+                const Text(
+                  'New Transaction',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                // const Padding(
+                //   padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                //   child: Align(
+                //     alignment: Alignment.centerLeft,
+                //     child: Text("Email"),
+                //   ),
+                // ),
                 TextFormField(
                   onSaved: (value) {
                     email = value;

@@ -26,7 +26,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       drawer: const AppDrawer(),
       appBar: PreferredSize(
         preferredSize:
-            Size.fromHeight(MediaQuery.of(context).size.height * 0.21),
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.3),
         child: AppBar(
           automaticallyImplyLeading: false,
           toolbarHeight: (MediaQuery.of(context).size.height),
@@ -60,12 +60,41 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
               Container(
-                height: MediaQuery.of(context).size.height * 0.09,
+                height: MediaQuery.of(context).size.height * 0.2,
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.5),
+                    width: 2,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Total Balance"),
+                    const Text("Rs. 45,000"),
+                    Divider(
+                      color: Colors.white.withOpacity(0.5),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: const [
+                        Text("Income"),
+                        Text("Expense"),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: const [
+                        Text("Rs. 45,000"),
+                        Text("Rs. 45,000"),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
