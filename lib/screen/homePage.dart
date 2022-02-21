@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               MaterialButton(
-                splashColor: Colors.greenAccent,
+                splashColor: Theme.of(context).primaryColor,
                 height: 60,
                 // minWidth: 50,
                 onPressed: () {
@@ -48,11 +48,22 @@ class _HomePageState extends State<HomePage> {
                     currentTab = 0;
                   });
                 },
-                child: Icon(Icons.home,
-                    color: currentTab == 0 ? Colors.green : Colors.grey),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.home,
+                        color: currentTab == 0
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey),
+                    Text(
+                      currentTab == 0 ? 'Home' : '',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )
+                  ],
+                ),
               ),
               MaterialButton(
-                splashColor: Colors.greenAccent,
+                splashColor: Theme.of(context).primaryColor,
                 height: 60,
                 // minWidth: 50,
                 onPressed: () {
@@ -61,11 +72,22 @@ class _HomePageState extends State<HomePage> {
                     currentTab = 1;
                   });
                 },
-                child: Icon(Icons.add,
-                    color: currentTab == 1 ? Colors.green : Colors.grey),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add,
+                        color: currentTab == 1
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey),
+                    Text(
+                      currentTab == 1 ? 'Transaction' : '',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )
+                  ],
+                ),
               ),
               MaterialButton(
-                splashColor: Colors.greenAccent,
+                splashColor: Theme.of(context).primaryColor,
                 height: 60,
                 // minWidth: 50,
                 onPressed: () {
@@ -74,8 +96,19 @@ class _HomePageState extends State<HomePage> {
                     currentTab = 2;
                   });
                 },
-                child: Icon(Icons.person,
-                    color: currentTab == 2 ? Colors.green : Colors.grey),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.person,
+                        color: currentTab == 2
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey),
+                    Text(
+                      currentTab == 2 ? 'Profile' : '',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )
+                  ],
+                ),
               ),
             ],
           ),

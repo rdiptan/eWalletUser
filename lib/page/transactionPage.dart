@@ -276,10 +276,10 @@ class _TransactionPageState extends State<TransactionPage> {
                   // width: double.infinity,
                   text: 'Slide to Pay',
                   backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF105F49),
-                  textStyle: const TextStyle(
+                  foregroundColor: Theme.of(context).primaryColor,
+                  textStyle: TextStyle(
                     fontSize: 20,
-                    color: Colors.black,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
