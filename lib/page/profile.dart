@@ -1,10 +1,12 @@
 import 'package:e_wallet/http/httpUser.dart';
 import 'package:e_wallet/model/userDetails.dart';
+import 'package:e_wallet/widgets/kyc.dart';
 import 'package:flutter/material.dart';
 import 'package:e_wallet/utils/load_token.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:e_wallet/utils/theme.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -104,7 +106,13 @@ class _ProfileState extends State<Profile> {
                     const Text("drt347826@gmail.com"),
                     TextButton(
                         style: Theme.of(context).textButtonTheme.style,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const KYC()),
+                          );
+                        },
                         child: const Text("Verify KYC")),
                   ],
                 ),
@@ -125,6 +133,59 @@ class _ProfileState extends State<Profile> {
         ),
         child: Column(
           children: [
+            const SizedBox(
+              height: 16,
+            ),
+            const Text(
+              "My Information",
+            ),
+            Divider(
+              color: Colors.black.withOpacity(0.5),
+            ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  "Name",
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Card(
+              margin: const EdgeInsets.all(10),
+              color: Colors.white,
+              elevation: 2,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text('My Review',
+                        style: Theme.of(context).textTheme.bodyText2,
+                        textAlign: TextAlign.center),
+                    subtitle: Text(
+                      'Review Date',
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Text(
+                      'Greyhound divisively hello coldly wonderfully marginally far upon excluding.',
+                      style: TextStyle(color: Colors.black.withOpacity(0.8)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
             TextButton(
                 onPressed: () async {
                   await removeToken();

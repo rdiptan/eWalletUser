@@ -46,6 +46,7 @@ dependencies:
   slide_to_confirm: ^1.1.0
   floor: ^1.2.0
   floor_generator: ^1.2.0
+  flutter_slidable: ^1.2.0
 
 dev_dependencies:
   flutter_test:
