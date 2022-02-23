@@ -47,6 +47,7 @@ dependencies:
   floor: ^1.2.0
   floor_generator: ^1.2.0
   flutter_slidable: ^1.2.0
+  awesome_notifications: ^0.6.21
 
 dev_dependencies:
   flutter_test:

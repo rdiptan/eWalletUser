@@ -6,9 +6,24 @@ import 'package:e_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 // void main() => runApp(const MyApp());
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  AwesomeNotifications().initialize(null, // icon for your app notification
+      [
+        NotificationChannel(
+            channelKey: 'eWallet',
+            channelName: 'eWallet',
+            channelDescription: "eWallet Notification",
+            defaultColor: const Color(0xFF105F49),
+            ledColor: Colors.white,
+            playSound: true,
+            enableLights: true,
+            enableVibration: true)
+      ]);
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.getInstance().then((prefs) {
     var isDarkTheme = prefs.getBool("darkTheme") ?? false;

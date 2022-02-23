@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:e_wallet/http/httpTransaction.dart';
 import 'package:e_wallet/model/transaction.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -253,23 +253,22 @@ class _TransactionPageState extends State<TransactionPage> {
                       String? sendmoney = await newTransaction(transaction);
                       if (sendmoney == "true") {
                         Navigator.pushReplacementNamed(context, 'home');
-                        MotionToast.success(
-                          description: Text(sendmoney!),
-                          title: const Text(
-                            "success",
-                            style: TextStyle(fontSize: 16, color: Colors.green),
-                          ),
-                          toastDuration: const Duration(seconds: 3),
-                        ).show(context);
+                        AwesomeNotifications().createNotification(
+                            content: NotificationContent(
+                          id: 1,
+                          channelKey: 'eWallet',
+                          title: 'Transaction Successful',
+                          body: 'Rs.$amount has been send to $email',
+                        ));
                       } else {
-                        MotionToast.error(
-                          description: Text(sendmoney!),
-                          title: const Text(
-                            "error",
-                            style: TextStyle(fontSize: 16, color: Colors.red),
-                          ),
-                          toastDuration: const Duration(seconds: 3),
-                        ).show(context);
+                        AwesomeNotifications().createNotification(
+                            content: NotificationContent(
+                          id: 2,
+                          channelKey: 'eWallet',
+                          title: 'Transaction Failed',
+                          body:
+                              'Transaction of Rs.$amount to $email is failed!!!',
+                        ));
                       }
                     }
                   },
