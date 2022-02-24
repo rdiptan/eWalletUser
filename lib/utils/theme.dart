@@ -8,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeData dark = ThemeData.dark().copyWith(
     scaffoldBackgroundColor: const Color(0xFF000000),
-    primaryColor: const Color(0xFF337762),
+    primaryColor: const Color(0xFF000000),
     accentColor: const Color(0xFFF6F6F6),
     canvasColor: const Color(0xFFE9FFAC),
     textTheme: const TextTheme(
@@ -32,11 +32,21 @@ class ThemeProvider extends ChangeNotifier {
         ),
       ),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        backgroundColor: const Color(0xFFE9FFAC),
+        primary: const Color(0xFF000000),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    ),
   );
 
   ThemeData light = ThemeData.light().copyWith(
     scaffoldBackgroundColor: const Color(0xFF105F49),
-    primaryColor: const Color(0xFF337762),
+    // primaryColor: const Color(0xFF337762),
+    primaryColor: const Color(0xFF105F49),
     accentColor: const Color(0xFFF6F6F6),
     canvasColor: const Color(0xFFE9FFAC),
     textTheme: const TextTheme(
@@ -54,6 +64,15 @@ class ThemeProvider extends ChangeNotifier {
         primary: const Color(0xFF105F49),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        backgroundColor: const Color(0xFFE9FFAC),
+        primary: const Color(0xFF105F49),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     ),

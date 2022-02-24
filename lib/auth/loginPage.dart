@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:e_wallet/http/httpUser.dart';
-import 'package:provider/provider.dart';
-import 'package:e_wallet/utils/theme.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -41,18 +39,8 @@ class _LoginPageState extends State<LoginPage> {
             Size.fromHeight(MediaQuery.of(context).size.height * 0.21),
         child: AppBar(
           automaticallyImplyLeading: false,
-          // toolbarHeight: (MediaQuery.of(context).size.height * 0.2),
           elevation: 0,
           backgroundColor: Colors.transparent,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.brightness_6),
-              color: Colors.white,
-              onPressed: () {
-                Provider.of<ThemeProvider>(context, listen: false).swapTheme();
-              },
-            ),
-          ],
         ),
       ),
       body: Stack(
@@ -73,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child: SingleChildScrollView(
               padding: EdgeInsets.all(MediaQuery.of(context).size.height / 32),
-              // padding: EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(
