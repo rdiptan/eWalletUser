@@ -1,9 +1,10 @@
+import 'package:e_wallet/http/httpUser.dart';
+import 'package:e_wallet/model/transactionSummary.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:e_wallet/http/httpTransaction.dart';
 import 'package:e_wallet/model/transaction.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:motion_toast/motion_toast.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -14,6 +15,9 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
+  late Future<TransactionSummary> futureSummary;
+  String balance = "";
+
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? amount;
@@ -31,6 +35,12 @@ class _TransactionPageState extends State<TransactionPage> {
   Future<String?> newTransaction(Transaction transaction) {
     var res = HttpConnectTransaction().newTransaction(transaction);
     return res;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    futureSummary = HttpConnectUser().getTransactionSummary();
   }
 
   @override
@@ -58,10 +68,22 @@ class _TransactionPageState extends State<TransactionPage> {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text("Total Balance"),
-                SizedBox(height: 10),
-                Text("Rs. 45,000"),
+              children: [
+                const Text("Total Balance"),
+                const SizedBox(height: 10),
+                FutureBuilder<TransactionSummary>(
+                  future: futureSummary,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      balance = snapshot.data!.balance != null
+                          ? "${snapshot.data!.balance}"
+                          : "NA";
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+                    return Text("Rs.$balance");
+                  },
+                ),
               ],
             ),
           ),

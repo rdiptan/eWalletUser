@@ -1,3 +1,5 @@
+import 'package:e_wallet/http/httpUser.dart';
+import 'package:e_wallet/model/transactionSummary.dart';
 import 'package:e_wallet/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -9,10 +11,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  late Future<TransactionSummary> futureSummary;
+  String name = "";
+  String balance = "";
+  String income = "";
+  String expense = "";
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
+    futureSummary = HttpConnectUser().getTransactionSummary();
   }
 
   late TabController _tabController;
@@ -49,7 +58,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           color: Colors.blueGrey,
                         ),
                       ),
-                      const Text("Diptan Regmi!"),
+                      FutureBuilder<TransactionSummary>(
+                        future: futureSummary,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            name = snapshot.data!.name != null
+                                ? "${snapshot.data!.name}"
+                                : "User";
+                          } else if (snapshot.hasError) {
+                            return Text("${snapshot.error}");
+                          }
+                          return Text(name);
+                        },
+                      ),
                     ],
                   ),
                   IconButton(
@@ -76,7 +97,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Total Balance"),
-                    const Text("Rs. 45,000"),
+                    FutureBuilder<TransactionSummary>(
+                      future: futureSummary,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          balance = snapshot.data!.balance != null
+                              ? "${snapshot.data!.balance}"
+                              : "NA";
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return Text("Rs.$balance");
+                      },
+                    ),
                     Divider(
                       color: Colors.white.withOpacity(0.5),
                     ),
@@ -89,9 +122,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
-                        Text("Rs. 45,000"),
-                        Text("Rs. 45,000"),
+                      children: [
+                        FutureBuilder<TransactionSummary>(
+                          future: futureSummary,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              income = snapshot.data!.credit != null
+                                  ? "${snapshot.data!.credit}"
+                                  : "NA";
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+                            return Text("Rs.$income");
+                          },
+                        ),
+                        FutureBuilder<TransactionSummary>(
+                          future: futureSummary,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              expense = snapshot.data!.debit != null
+                                  ? "${snapshot.data!.debit}"
+                                  : "NA";
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+                            return Text("Rs.$expense");
+                          },
+                        ),
                       ],
                     ),
                   ],

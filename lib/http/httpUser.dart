@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:e_wallet/model/transactionSummary.dart';
 import 'package:e_wallet/model/user.dart';
 import 'package:e_wallet/model/userDetails.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:e_wallet/utils/load_token.dart';
 import 'package:e_wallet/response/user_auth_resp.dart';
 import 'package:e_wallet/response/user_data_resp.dart';
+import 'package:e_wallet/response/transaction_summary_resp.dart';
 
 class HttpConnectUser {
   String baseurl = "http://10.0.2.2:90/";
@@ -79,6 +81,23 @@ class HttpConnectUser {
       return processedResponse.data;
     } else {
       return UserDetails();
+    }
+  }
+
+  Future<TransactionSummary> getTransactionSummary() async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+    final response =
+        await http.get(Uri.parse(baseurl + 'transaction/summary'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': authToken,
+    });
+    if (response.statusCode == 200) {
+      var processedResponse =
+          TransactionSummaryResp.fromJson(jsonDecode(response.body));
+      return processedResponse.data;
+    } else {
+      return TransactionSummary();
     }
   }
 }

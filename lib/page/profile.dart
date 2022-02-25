@@ -18,6 +18,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   late Future<UserDetails> futureProfile;
   String displayName = "";
+  String email = "";
   @override
   void initState() {
     super.initState();
@@ -60,7 +61,7 @@ class _ProfileState extends State<Profile> {
                             displayName = snapshot.data!.user!.lname != null ||
                                     snapshot.data!.user!.lname != null
                                 ? "${snapshot.data!.user!.fname} ${snapshot.data!.user!.lname}"
-                                : "";
+                                : "User";
                           } else if (snapshot.hasError) {
                             return Text("${snapshot.error}");
                           }
@@ -103,7 +104,19 @@ class _ProfileState extends State<Profile> {
                     Divider(
                       color: Colors.white.withOpacity(0.5),
                     ),
-                    const Text("drt347826@gmail.com"),
+                    FutureBuilder<UserDetails>(
+                      future: futureProfile,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          email = snapshot.data!.user!.email != null
+                              ? "${snapshot.data!.user!.email}"
+                              : "NA";
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return Text(email);
+                      },
+                    ),
                     TextButton(
                         style: Theme.of(context).textButtonTheme.style,
                         onPressed: () {
