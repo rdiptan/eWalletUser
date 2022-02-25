@@ -84,6 +84,30 @@ class HttpConnectUser {
     }
   }
 
+  Future<String?> updateKYC(UserDetails userdetails) async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+
+    Map<String, dynamic> kycMap = {
+      "phone": userdetails.phone,
+      "address": userdetails.address,
+      "dob": userdetails.dob,
+      "citizenship": userdetails.citizenship,
+    };
+    final response = await http.put(Uri.parse(baseurl + 'user/kyc/update'),
+        headers: {
+          "content-type": "application/json",
+          'Authorization': authToken,
+        },
+        body: jsonEncode(kycMap));
+    if (jsonDecode(response.body)['success'] == true) {
+      return 'true';
+    } else {
+      var kycResponse = jsonDecode(response.body);
+      return kycResponse['msg'];
+    }
+  }
+
   Future<TransactionSummary> getTransactionSummary() async {
     String? futureToken = await loadToken();
     String authToken = 'Bearer $futureToken';

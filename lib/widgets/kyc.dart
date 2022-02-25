@@ -1,4 +1,17 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:async';
+import 'package:async/async.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:e_wallet/utils/load_token.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:e_wallet/http/httpUser.dart';
+import 'package:e_wallet/model/userDetails.dart';
 
 class KYC extends StatefulWidget {
   const KYC({Key? key}) : super(key: key);
@@ -8,61 +21,202 @@ class KYC extends StatefulWidget {
 }
 
 class _KYCState extends State<KYC> {
+  final _formKey = GlobalKey<FormState>();
+  String? phone;
+  String? address;
+  DateTime? dob;
+  String? citizenship;
+  File? _image;
+
+  final picker = ImagePicker();
+  String baseurl = "http://10.0.2.2:90/";
+
+  Future<void> getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  upload(File imageFile) async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': authToken,
+    };
+
+    // open a bytestream
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    // get file length
+    var length = await imageFile.length();
+
+    // string to uri
+    var uri = Uri.parse(baseurl + "user/kyc/update");
+
+    // create multipart request
+    var request = http.MultipartRequest("PUT", uri);
+
+    request.headers.addAll(headers);
+
+    // multipart that takes file
+    var multipartFile = http.MultipartFile('document', stream, length,
+        filename: path.basename(imageFile.path));
+
+    // add file to multipart
+    request.files.add(multipartFile);
+
+    // send
+    var response = await request.send();
+    print(response.statusCode);
+
+    // listen for response
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
+  }
+
   int _currentStep = 0;
+
+  Future<String?> updateKYC(UserDetails userdetails) {
+    var res = HttpConnectUser().updateKYC(userdetails);
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text('KYC'),
+        centerTitle: true,
+        elevation: 0,
       ),
-      body: Center(
-        child: Stepper(
-          steps: [
-            Step(
-              title: const Text('Step 1'),
-              isActive: _currentStep >= 0,
-              state:
-                  _currentStep >= 0 ? StepState.complete : StepState.disabled,
-              content: const Text('This is the first step.'),
-            ),
-            Step(
-              title: const Text('Step 2'),
-              isActive: _currentStep >= 1,
-              state:
-                  _currentStep >= 1 ? StepState.complete : StepState.disabled,
-              content: const Text('This is the second step.'),
-            ),
-            Step(
-              title: const Text('Step 3'),
-              isActive: _currentStep >= 2,
-              state:
-                  _currentStep >= 2 ? StepState.complete : StepState.disabled,
-              content: const Text('This is the third step.'),
-            ),
-          ],
-          onStepTapped: (int newIndex) {
-            setState(() {
-              _currentStep = newIndex;
-            });
-          },
-          currentStep: _currentStep,
-          onStepContinue: () {
-            setState(() {
-              if (_currentStep != 2) {
-                _currentStep += 1;
-              }
-            });
-          },
-          onStepCancel: () {
-            setState(() {
-              if (_currentStep != 0) {
-                _currentStep -= 1;
-              }
-            });
-          },
+      body: Form(
+        key: _formKey,
+        child: Center(
+          child: Stepper(
+            type: StepperType.vertical,
+            physics: const ScrollPhysics(),
+            currentStep: _currentStep,
+            onStepTapped: (step) => tapped(step),
+            onStepContinue: continued,
+            onStepCancel: cancel,
+            steps: <Step>[
+              Step(
+                title: const Text('Personal Information'),
+                isActive: _currentStep >= 0,
+                state:
+                    _currentStep >= 0 ? StepState.complete : StepState.disabled,
+                content: Column(
+                  children: [
+                    TextFormField(
+                      onSaved: (value) {
+                        phone = value;
+                      },
+                      decoration:
+                          const InputDecoration(labelText: 'Phone Number'),
+                    ),
+                    TextFormField(
+                      onSaved: (value) {
+                        address = value;
+                      },
+                      decoration: const InputDecoration(labelText: 'Address'),
+                    ),
+                    DateTimePicker(
+                      initialValue: '',
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Date',
+                      onChanged: (val) => print(val),
+                      validator: (val) {
+                        print(val);
+                        return null;
+                      },
+                      onSaved: (val) {
+                        dob = val as DateTime?;
+                      },
+                    ),
+                    TextFormField(
+                      onSaved: (value) {
+                        citizenship = value;
+                      },
+                      decoration: const InputDecoration(
+                          labelText: 'Citizenship Number'),
+                    ),
+                  ],
+                ),
+              ),
+              Step(
+                title: const Text('Document Upload'),
+                isActive: _currentStep >= 1,
+                state:
+                    _currentStep >= 1 ? StepState.complete : StepState.disabled,
+                content: Column(
+                  children: [
+                    const Text("Select an image"),
+                    FlatButton.icon(
+                        onPressed: () async => await getImage(),
+                        icon: const Icon(Icons.upload_file),
+                        label: const Text("Browse")),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _image == null
+                        ? const CircularProgressIndicator()
+                        : Image.file(
+                            _image!,
+                          ),
+                    FlatButton.icon(
+                        onPressed: () => upload(_image!),
+                        icon: const Icon(Icons.upload_rounded),
+                        label: const Text("Upload now")),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  tapped(int step) {
+    setState(() => _currentStep = step);
+  }
+
+  continued() {
+    _currentStep < 1
+        ? setState(() async {
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+
+              UserDetails userdetails = UserDetails(
+                phone: phone,
+                address: address,
+                dob: dob,
+                citizenship: citizenship,
+              );
+              String? updatekyc = await updateKYC(userdetails);
+              if (updatekyc == "true") {
+                _currentStep += 1;
+              }
+            }
+          })
+        : upload(_image!);
+  }
+
+  cancel() {
+    _currentStep > 0
+        ? setState(() {
+            _currentStep -= 1;
+          })
+        : Navigator.of(context).pop();
   }
 }

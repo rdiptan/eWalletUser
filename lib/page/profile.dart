@@ -95,11 +95,31 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      backgroundImage: const NetworkImage(
-                          'https://www.woolha.com/media/2020/03/eevee.png'),
-                      backgroundColor: Theme.of(context).primaryColor,
-                      radius: 40,
+                    FutureBuilder<UserDetails>(
+                      future: futureProfile,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data!.user!.image != null) {
+                            return CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  'http://10.0.2.2:90/${snapshot.data!.user!.image}'),
+                              backgroundColor: Theme.of(context).primaryColor,
+                              radius: 40,
+                            );
+                          } else {
+                            return CircleAvatar(
+                              backgroundImage: const NetworkImage(
+                                  'https://www.woolha.com/media/2020/03/eevee.png'),
+                              backgroundColor: Theme.of(context).primaryColor,
+                              radius: 40,
+                            );
+                          }
+                        }
+                        return CircleAvatar(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          radius: 40,
+                        );
+                      },
                     ),
                     Divider(
                       color: Colors.white.withOpacity(0.5),
@@ -117,16 +137,28 @@ class _ProfileState extends State<Profile> {
                         return Text(email);
                       },
                     ),
-                    TextButton(
-                        style: Theme.of(context).textButtonTheme.style,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const KYC()),
-                          );
-                        },
-                        child: const Text("Verify KYC")),
+                    FutureBuilder<UserDetails>(
+                      future: futureProfile,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data!.isVerified == false) {
+                            return TextButton(
+                                style: Theme.of(context).textButtonTheme.style,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const KYC()),
+                                  );
+                                },
+                                child: const Text("Verify KYC"));
+                          } else {
+                            return const Icon(Icons.check_circle);
+                          }
+                        }
+                        return const Icon(Icons.pending);
+                      },
+                    ),
                   ],
                 ),
               ),

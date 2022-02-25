@@ -50,6 +50,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           overflow: Overflow.visible,
           clipBehavior: Clip.antiAliasWithSaveLayer,
           fit: StackFit.loose,
+          alignment: Alignment.center,
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
@@ -311,7 +312,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             Positioned(
                 top: -(MediaQuery.of(context).size.height / 4.75),
-                left: (MediaQuery.of(context).size.height / 15),
+                // left: (MediaQuery.of(context).size.height / 15),
                 child: Image.asset(
                   'images/CurrencySecure.png',
                   fit: BoxFit.contain,

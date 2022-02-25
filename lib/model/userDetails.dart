@@ -9,7 +9,7 @@ class UserDetails {
   String? address;
   String? citizenship;
   String? citizenshipProof;
-  String? dob;
+  DateTime? dob;
   bool? isVerified;
   num? balance;
 

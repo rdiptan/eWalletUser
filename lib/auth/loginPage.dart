@@ -48,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
         overflow: Overflow.visible,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         fit: StackFit.loose,
+        alignment: Alignment.center,
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
@@ -226,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
           Positioned(
             // top: -160,
             top: -(MediaQuery.of(context).size.height / 4.75),
-            left: (MediaQuery.of(context).size.height / 15),
+            // left: (MediaQuery.of(context).size.height / 15),
             child: Image.asset(
               'images/Currency.png',
               fit: BoxFit.contain,
