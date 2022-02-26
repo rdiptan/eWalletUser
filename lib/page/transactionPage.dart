@@ -189,9 +189,8 @@ class _TransactionPageState extends State<TransactionPage> {
                   onSaved: (value) {
                     category = value as String?;
                   },
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: "* Required Field"),
-                  ]),
+                  validator: (value) =>
+                      value == null ? '* Required Field' : null,
                   style: Theme.of(context).textTheme.bodyText2,
                   dropdownColor: const Color(0xFF105F49),
                   decoration: InputDecoration(

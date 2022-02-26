@@ -94,7 +94,7 @@ class HttpConnectUser {
       "dob": userdetails.dob,
       "citizenship": userdetails.citizenship,
     };
-    final response = await http.put(Uri.parse(baseurl + 'user/kyc/update'),
+    final response = await http.put(Uri.parse(baseurl + 'user/kyc/data'),
         headers: {
           "content-type": "application/json",
           'Authorization': authToken,

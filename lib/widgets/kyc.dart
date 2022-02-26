@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:async';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:path/path.dart' as path;
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:e_wallet/utils/load_token.dart';
@@ -24,7 +24,7 @@ class _KYCState extends State<KYC> {
   final _formKey = GlobalKey<FormState>();
   String? phone;
   String? address;
-  DateTime? dob;
+  String? dob;
   String? citizenship;
   File? _image;
 
@@ -80,6 +80,26 @@ class _KYCState extends State<KYC> {
     response.stream.transform(utf8.decoder).listen((value) {
       print(value);
     });
+    if (response.statusCode == 200) {
+      MotionToast.success(
+        description: const Text("Your KYC has been updated successfully"),
+        title: const Text(
+          "Documents Updated",
+          style: TextStyle(fontSize: 16, color: Colors.green),
+        ),
+        toastDuration: const Duration(seconds: 3),
+      ).show(context);
+      Navigator.pushReplacementNamed(context, 'home');
+    } else {
+      MotionToast.error(
+        description: const Text("Error occured while updating KYC"),
+        title: const Text(
+          "error",
+          style: TextStyle(fontSize: 16, color: Colors.red),
+        ),
+        toastDuration: const Duration(seconds: 3),
+      ).show(context);
+    }
   }
 
   int _currentStep = 0;
@@ -120,6 +140,11 @@ class _KYCState extends State<KYC> {
                       onSaved: (value) {
                         phone = value;
                       },
+                      validator: MultiValidator([
+                        RequiredValidator(errorText: "* Required Field"),
+                        MinLengthValidator(8,
+                            errorText: 'Invalid phone number'),
+                      ]),
                       decoration:
                           const InputDecoration(labelText: 'Phone Number'),
                     ),
@@ -127,6 +152,9 @@ class _KYCState extends State<KYC> {
                       onSaved: (value) {
                         address = value;
                       },
+                      validator: MultiValidator([
+                        RequiredValidator(errorText: "* Required Field"),
+                      ]),
                       decoration: const InputDecoration(labelText: 'Address'),
                     ),
                     DateTimePicker(
@@ -135,18 +163,20 @@ class _KYCState extends State<KYC> {
                       lastDate: DateTime(2100),
                       dateLabelText: 'Date',
                       onChanged: (val) => print(val),
-                      validator: (val) {
-                        print(val);
-                        return null;
-                      },
+                      validator: MultiValidator([
+                        RequiredValidator(errorText: "* Required Field"),
+                      ]),
                       onSaved: (val) {
-                        dob = val as DateTime?;
+                        dob = val!;
                       },
                     ),
                     TextFormField(
                       onSaved: (value) {
                         citizenship = value;
                       },
+                      validator: MultiValidator([
+                        RequiredValidator(errorText: "* Required Field"),
+                      ]),
                       decoration: const InputDecoration(
                           labelText: 'Citizenship Number'),
                     ),
@@ -173,10 +203,10 @@ class _KYCState extends State<KYC> {
                         : Image.file(
                             _image!,
                           ),
-                    FlatButton.icon(
-                        onPressed: () => upload(_image!),
-                        icon: const Icon(Icons.upload_rounded),
-                        label: const Text("Upload now")),
+                    // FlatButton.icon(
+                    //     onPressed: () => upload(_image!),
+                    //     icon: const Icon(Icons.upload_rounded),
+                    //     label: const Text("Upload now")),
                   ],
                 ),
               ),
@@ -191,25 +221,24 @@ class _KYCState extends State<KYC> {
     setState(() => _currentStep = step);
   }
 
-  continued() {
-    _currentStep < 1
-        ? setState(() async {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-
-              UserDetails userdetails = UserDetails(
-                phone: phone,
-                address: address,
-                dob: dob,
-                citizenship: citizenship,
-              );
-              String? updatekyc = await updateKYC(userdetails);
-              if (updatekyc == "true") {
-                _currentStep += 1;
-              }
-            }
-          })
-        : upload(_image!);
+  continued() async {
+    if (_currentStep < 1) {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        UserDetails userdetails = UserDetails(
+          phone: phone,
+          address: address,
+          dob: dob,
+          citizenship: citizenship,
+        );
+        String? updatekyc = await updateKYC(userdetails);
+        if (updatekyc == "true") {
+          setState(() => _currentStep += 1);
+        }
+      }
+    } else {
+      upload(_image!);
+    }
   }
 
   cancel() {
