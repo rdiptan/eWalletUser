@@ -50,6 +50,7 @@ dependencies:
   awesome_notifications: ^0.6.21
   date_time_picker: ^2.1.0
   image_picker: ^0.8.4+9
+  flutter_rating_bar: ^4.0.0
 
 dev_dependencies:
   flutter_test:

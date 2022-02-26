@@ -28,11 +28,9 @@ class _KYCState extends State<KYC> {
   String? citizenship;
   File? _image;
 
-  final picker = ImagePicker();
-  String baseurl = "http://10.0.2.2:90/";
-
   Future<void> getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -44,6 +42,8 @@ class _KYCState extends State<KYC> {
   }
 
   upload(File imageFile) async {
+    String baseurl = "http://10.0.2.2:90/";
+
     String? futureToken = await loadToken();
     String authToken = 'Bearer $futureToken';
 

@@ -2,10 +2,11 @@
 
 import 'dart:convert';
 import 'dart:async';
-
+import 'package:e_wallet/model/review.dart';
 import 'package:e_wallet/model/transactionSummary.dart';
 import 'package:e_wallet/model/user.dart';
 import 'package:e_wallet/model/userDetails.dart';
+import 'package:e_wallet/response/review_data_resp.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:e_wallet/utils/load_token.dart';
@@ -122,6 +123,47 @@ class HttpConnectUser {
       return processedResponse.data;
     } else {
       return TransactionSummary();
+    }
+  }
+
+  Future<Review> getReview() async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+    final response =
+        await http.get(Uri.parse(baseurl + 'review/view'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': authToken,
+    });
+    if (response.statusCode == 200) {
+      var processedResponse =
+          ResponseGetReview.fromJson(jsonDecode(response.body));
+      return processedResponse.data;
+    } else {
+      return Review();
+    }
+  }
+
+  Future<String?> newReview(String newcomment, double newrating) async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+
+    Map<String, dynamic> reviewMap = {
+      "comment": newcomment,
+      "rating": newrating,
+    };
+    print(reviewMap);
+    final response = await http.post(Uri.parse(baseurl + 'review/write'),
+        headers: {
+          "content-type": "application/json",
+          'Authorization': authToken,
+        },
+        body: jsonEncode(reviewMap));
+    print(response.body);
+    if (jsonDecode(response.body)['success'] == true) {
+      return 'true';
+    } else {
+      var reviewResponse = jsonDecode(response.body);
+      return reviewResponse['msg'];
     }
   }
 }
