@@ -6,7 +6,7 @@ part 'review.g.dart';
 
 @JsonSerializable()
 class Review {
-  final double? rating;
+  final String? rating;
   final String? comment;
   String? updated_at;
 

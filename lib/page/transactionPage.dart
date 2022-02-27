@@ -105,11 +105,12 @@ class _TransactionPageState extends State<TransactionPage> {
             key: _formKey,
             child: Column(
               children: [
-                const Text(
+                Text(
                   'New Transaction',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 const SizedBox(

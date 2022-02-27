@@ -37,6 +37,7 @@ class _ProfileState extends State<Profile> {
 
   String displayName = "";
   String email = "";
+  String balance = "";
 
   String comment = "";
   double ratingNo = 0;
@@ -326,32 +327,19 @@ class _ProfileState extends State<Profile> {
                           email = snapshot.data!.user!.email != null
                               ? "${snapshot.data!.user!.email}"
                               : "NA";
+                          balance = snapshot.data!.balance != null
+                              ? "${snapshot.data!.balance}"
+                              : "NA";
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}");
                         }
-                        return Text(email);
-                      },
-                    ),
-                    FutureBuilder<UserDetails>(
-                      future: futureProfile,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          if (snapshot.data!.isVerified == false) {
-                            return TextButton(
-                                style: Theme.of(context).textButtonTheme.style,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const KYC()),
-                                  );
-                                },
-                                child: const Text("Verify KYC"));
-                          } else {
-                            return const Icon(Icons.check_circle);
-                          }
-                        }
-                        return const Icon(Icons.pending);
+                        return Column(
+                          children: [
+                            Text(email),
+                            const SizedBox(height: 10),
+                            Text("Rs." + balance),
+                          ],
+                        );
                       },
                     ),
                   ],
@@ -361,230 +349,365 @@ class _ProfileState extends State<Profile> {
           ),
         ),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: (MediaQuery.of(context).size.height),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          constraints: BoxConstraints(
+              minHeight: (MediaQuery.of(context).size.height * 0.625)),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            color: Theme.of(context).accentColor,
           ),
-          color: Theme.of(context).accentColor,
-        ),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 16,
-            ),
-            const Text(
-              "My Information",
-            ),
-            Divider(
-              color: Colors.black.withOpacity(0.5),
-            ),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  "Name",
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                "My Information",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            FutureBuilder<Review>(
-              future: futureReview,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  ratingNo = (snapshot.data!.rating!);
-                  comment = snapshot.data!.comment!;
-                  var updatedDate = snapshot.data!.updated_at!;
-                  var reviewDate = (DateTime.parse(updatedDate));
-                  DateFormat formatter = DateFormat("yyyy-MM-dd");
-                  updatedAt = formatter.format(reviewDate);
-                } else if (snapshot.hasError) {
-                  return TextButton(
-                      onPressed: () {
-                        showModalBottomSheet<void>(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (BuildContext context) {
-                            return Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: Container(
-                                color: Theme.of(context).primaryColor,
-                                height: 250,
-                                width: MediaQuery.of(context).size.width,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 20),
-                                child: Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                        "Add a Review",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.white),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      TextFormField(
-                                        decoration: InputDecoration(
-                                          hintText: "Add a Comment",
-                                          errorBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              borderSide: const BorderSide(
-                                                  color: Colors.red)),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                              borderSide: const BorderSide(
-                                                  color: Colors.white)),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            borderSide: const BorderSide(
-                                                color: Color(0xFF105F49)),
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                        ),
-                                        validator: MultiValidator([
-                                          RequiredValidator(
-                                              errorText: "* Required Field")
-                                        ]),
-                                        minLines: 2,
-                                        maxLines: 3,
-                                        onSaved: (value) {
-                                          newComment = value!;
-                                        },
-                                      ),
-                                      RatingBar.builder(
-                                        initialRating: 1,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemPadding: const EdgeInsets.symmetric(
-                                            horizontal: 4.0),
-                                        itemBuilder: (context, _) => const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        onRatingUpdate: (Rating) {
-                                          newRating = Rating;
-                                        },
-                                      ),
-                                      TextButton(
-                                          onPressed: () async {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              _formKey.currentState!.save();
-                                              String? newreview =
-                                                  await newReview(
-                                                      newComment, newRating);
-                                              if (newreview == 'true') {
-                                                _formKey.currentState!.reset();
-                                                Navigator.pop(context);
-                                                setState(() {
-                                                  futureReview =
-                                                      HttpConnectUser()
-                                                          .getReview();
-                                                });
-                                              } else {
-                                                Navigator.pop(context);
-                                              }
-                                            }
-                                          },
-                                          child: const Text("Submit")),
-                                    ],
-                                  ),
-                                ),
-                              ),
+              Divider(
+                color: Colors.black.withOpacity(0.5),
+              ),
+              FutureBuilder<UserDetails>(
+                future: futureProfile,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.isVerified == false) {
+                      return TextButton(
+                          style: Theme.of(context).textButtonTheme.style,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const KYC()),
                             );
                           },
-                        );
-                      },
-                      child: const Text("Add Review"));
-                }
-                return Card(
-                  margin: const EdgeInsets.all(10),
-                  color: Colors.white,
-                  elevation: 2,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: Text('My Review',
-                            style: Theme.of(context).textTheme.bodyText2,
-                            textAlign: TextAlign.center),
-                        subtitle: Text(
-                          updatedAt,
-                          style:
-                              TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: const Text(
+                            "Verify KYC",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ));
+                    } else {
+                      var phone = snapshot.data!.phone != null
+                          ? "${snapshot.data!.phone}"
+                          : "NA";
+                      var address = snapshot.data!.address != null
+                          ? "${snapshot.data!.address}"
+                          : "NA";
+                      var dob = snapshot.data!.dob != null
+                          ? (snapshot.data!.dob).toString().substring(0, 10)
+                          : "NA";
+                      var citizenship = snapshot.data!.citizenship != null
+                          ? "${snapshot.data!.citizenship}"
+                          : "NA";
+                      var citizenshipProof = snapshot.data!.citizenshipProof !=
+                              null
+                          ? "http://10.0.2.2:90/${snapshot.data!.citizenshipProof}"
+                          : 'https://picsum.photos/250?image=9';
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              RatingBarIndicator(
-                                  itemBuilder: (context, index) {
-                                    return const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    );
-                                  },
-                                  itemCount: 5,
-                                  rating: ratingNo,
-                                  itemSize: 20),
-                              const SizedBox(height: 16),
-                              Text(
-                                comment,
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(0.8)),
+                              Row(
+                                children: [
+                                  const Text("Phone Number: "),
+                                  Text(
+                                    phone,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                children: [
+                                  const Text("Address: "),
+                                  Text(
+                                    address,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                children: [
+                                  const Text("Date of Birth: "),
+                                  Text(
+                                    dob,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                children: [
+                                  const Text("Citizenship: "),
+                                  Text(
+                                    citizenship,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Center(
+                                child: Image.network(citizenshipProof),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextButton(
-                onPressed: () async {
-                  await removeToken();
-                  Navigator.pushReplacementNamed(context, 'login');
-                  MotionToast.success(
-                    description: const Text("Logout Successfully"),
-                    title: const Text(
-                      "success",
-                      style: TextStyle(fontSize: 16, color: Colors.green),
-                    ),
-                    toastDuration: const Duration(seconds: 3),
-                  ).show(context);
+                      );
+                    }
+                  }
+                  return const CircularProgressIndicator();
                 },
-                style: Theme.of(context).textButtonTheme.style,
-                child: const Text("Logout")),
-          ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              FutureBuilder<Review>(
+                future: futureReview,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    ratingNo = double.parse(snapshot.data!.rating!);
+                    comment = snapshot.data!.comment!;
+                    var updatedDate = snapshot.data!.updated_at!;
+                    var reviewDate = (DateTime.parse(updatedDate));
+                    DateFormat formatter = DateFormat("yyyy-MM-dd");
+                    updatedAt = formatter.format(reviewDate);
+                  } else if (snapshot.hasError) {
+                    return Column(
+                      children: [
+                        // Text('$snapshot.error'),
+                        TextButton(
+                            onPressed: () {
+                              showModalBottomSheet<void>(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: Container(
+                                      color: Theme.of(context).primaryColor,
+                                      height: 300,
+                                      width: MediaQuery.of(context).size.width,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 20),
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                              "Add a Review",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: Colors.white),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            TextFormField(
+                                              decoration: InputDecoration(
+                                                hintText: "Add a Comment",
+                                                errorBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            color: Colors.red)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Colors
+                                                                    .white)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  borderSide: const BorderSide(
+                                                      color: Color(0xFF105F49)),
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                              ),
+                                              validator: MultiValidator([
+                                                RequiredValidator(
+                                                    errorText:
+                                                        "* Required Field")
+                                              ]),
+                                              minLines: 2,
+                                              maxLines: 3,
+                                              onSaved: (value) {
+                                                newComment = value!;
+                                              },
+                                            ),
+                                            RatingBar.builder(
+                                              initialRating: 1,
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              itemCount: 5,
+                                              itemPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 4.0),
+                                              itemBuilder: (context, _) =>
+                                                  const Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                              ),
+                                              onRatingUpdate: (Rating) {
+                                                newRating = Rating;
+                                              },
+                                            ),
+                                            TextButton(
+                                                onPressed: () async {
+                                                  if (_formKey.currentState!
+                                                      .validate()) {
+                                                    _formKey.currentState!
+                                                        .save();
+                                                    String? newreview =
+                                                        await newReview(
+                                                            newComment,
+                                                            newRating);
+                                                    if (newreview == 'true') {
+                                                      _formKey.currentState!
+                                                          .reset();
+                                                      Navigator.pop(context);
+                                                      setState(() {
+                                                        futureReview =
+                                                            HttpConnectUser()
+                                                                .getReview();
+                                                      });
+                                                    } else {
+                                                      Navigator.pop(context);
+                                                    }
+                                                  }
+                                                },
+                                                child: const Text("Submit")),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: const Text("Add Review")),
+                      ],
+                    );
+                  }
+                  return Card(
+                    margin: const EdgeInsets.all(10),
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text('My Review',
+                              style: Theme.of(context).textTheme.bodyText2,
+                              textAlign: TextAlign.center),
+                          subtitle: Text(
+                            updatedAt,
+                            style:
+                                TextStyle(color: Colors.black.withOpacity(0.6)),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RatingBarIndicator(
+                                    itemBuilder: (context, index) {
+                                      return const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      );
+                                    },
+                                    itemCount: 5,
+                                    rating: ratingNo,
+                                    itemSize: 20),
+                                const SizedBox(height: 16),
+                                Text(
+                                  comment,
+                                  style: TextStyle(
+                                      color: Colors.black.withOpacity(0.8)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextButton(
+                  onPressed: () async {
+                    await removeToken();
+                    Navigator.pushReplacementNamed(context, 'login');
+                    MotionToast.success(
+                      description: const Text("Logout Successfully"),
+                      title: const Text(
+                        "success",
+                        style: TextStyle(fontSize: 16, color: Colors.green),
+                      ),
+                      toastDuration: const Duration(seconds: 3),
+                    ).show(context);
+                  },
+                  style: Theme.of(context).textButtonTheme.style,
+                  child: const Text("Logout")),
+            ],
+          ),
         ),
       ),
     );
