@@ -1,9 +1,12 @@
 // ignore_for_file: file_names
 
+import 'package:e_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:e_wallet/page/home.dart';
 import 'package:e_wallet/page/profile.dart';
 import 'package:e_wallet/page/transactionPage.dart';
+import 'package:provider/provider.dart';
+import 'package:shake/shake.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,6 +22,14 @@ class _HomePageState extends State<HomePage> {
     const TransactionPage(),
     const Profile(),
   ];
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   ShakeDetector detector = ShakeDetector.autoStart(onPhoneShake: () {
+  //     Provider.of<ThemeProvider>(context, listen: false).swapTheme();
+  //   });
+  // }
 
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = const Home();
