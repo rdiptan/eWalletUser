@@ -10,7 +10,7 @@ class ThemeProvider extends ChangeNotifier {
     scaffoldBackgroundColor: const Color(0xFF000000),
     primaryColor: const Color(0xFF000000),
     accentColor: const Color(0xFFF6F6F6),
-    canvasColor: const Color(0xFFE9FFAC),
+    canvasColor: const Color(0xFF000000),
     textTheme: const TextTheme(
       bodyText1: TextStyle(
           color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
@@ -48,7 +48,7 @@ class ThemeProvider extends ChangeNotifier {
     // primaryColor: const Color(0xFF337762),
     primaryColor: const Color(0xFF105F49),
     accentColor: const Color(0xFFF6F6F6),
-    canvasColor: const Color(0xFFE9FFAC),
+    canvasColor: const Color(0xFF337762),
     textTheme: const TextTheme(
       bodyText1: TextStyle(
           color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),

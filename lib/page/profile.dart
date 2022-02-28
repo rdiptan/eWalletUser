@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:async/async.dart';
 import 'package:e_wallet/model/review.dart';
+import 'package:e_wallet/widgets/drawer.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
@@ -13,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:e_wallet/utils/load_token.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
-import 'package:provider/provider.dart';
-import 'package:e_wallet/utils/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -28,9 +27,10 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   File? _image;
   String newComment = "";
-  double newRating = 0;
+  double newRating = 1;
 
   late Future<UserDetails> futureProfile;
   late Future<Review> futureReview;
@@ -40,15 +40,29 @@ class _ProfileState extends State<Profile> {
   String balance = "";
 
   String comment = "";
-  double ratingNo = 0;
+  double ratingNo = 1;
   String updatedAt = "";
+
+  Future<String?> newReview(String newComment, double newRating) async {
+    var res = HttpConnectUser().newReview(newComment, newRating);
+    return res;
+  }
+
+  Future<String?> changeReview(String newComment, double newRating) async {
+    var res = HttpConnectUser().updateReview(newComment, newRating);
+    return res;
+  }
+
+  Future<String?> deleteReviewData() {
+    var res = HttpConnectUser().deleteReview();
+    return res;
+  }
 
   @override
   void initState() {
     super.initState();
     futureProfile = HttpConnectUser().getUser();
     futureReview = HttpConnectUser().getReview();
-    _image = null;
   }
 
   //method to open image from gallery
@@ -141,14 +155,11 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Future<String?> newReview(String newComment, double newRating) async {
-    var res = HttpConnectUser().newReview(newComment, newRating);
-    return res;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const AppDrawer(),
       resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
         preferredSize:
@@ -192,11 +203,9 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                   IconButton(
-                    icon: const Icon(Icons.brightness_6),
-                    color: Colors.white,
+                    icon: const Icon(Icons.settings),
                     onPressed: () {
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .swapTheme();
+                      _scaffoldKey.currentState!.openDrawer();
                     },
                   ),
                 ],
@@ -349,18 +358,18 @@ class _ProfileState extends State<Profile> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          constraints: BoxConstraints(
-              minHeight: (MediaQuery.of(context).size.height * 0.625)),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            color: Theme.of(context).accentColor,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        constraints: BoxConstraints(
+            minHeight: (MediaQuery.of(context).size.height * 0.625)),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
+          color: Theme.of(context).accentColor,
+        ),
+        child: SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(
@@ -644,46 +653,73 @@ class _ProfileState extends State<Profile> {
                       borderRadius: BorderRadius.all(Radius.circular(16)),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Text('My Review',
-                              style: Theme.of(context).textTheme.bodyText2,
-                              textAlign: TextAlign.center),
-                          subtitle: Text(
-                            updatedAt,
-                            style:
-                                TextStyle(color: Colors.black.withOpacity(0.6)),
+                    child: Slidable(
+                      key: const ValueKey(0),
+                      endActionPane: ActionPane(
+                        motion: const StretchMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: updateReview,
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            icon: Icons.update,
+                            label: 'Update',
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                RatingBarIndicator(
-                                    itemBuilder: (context, index) {
-                                      return const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      );
-                                    },
-                                    itemCount: 5,
-                                    rating: ratingNo,
-                                    itemSize: 20),
-                                const SizedBox(height: 16),
-                                Text(
-                                  comment,
-                                  style: TextStyle(
-                                      color: Colors.black.withOpacity(0.8)),
-                                ),
-                              ],
+                        ],
+                      ),
+                      startActionPane: ActionPane(
+                        motion: const StretchMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: deleteReview,
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text('My Review',
+                                style: Theme.of(context).textTheme.bodyText2,
+                                textAlign: TextAlign.center),
+                            subtitle: Text(
+                              updatedAt,
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.6)),
                             ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  RatingBarIndicator(
+                                      itemBuilder: (context, index) {
+                                        return const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        );
+                                      },
+                                      itemCount: 5,
+                                      rating: ratingNo,
+                                      itemSize: 20),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    comment,
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(0.8)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -691,25 +727,191 @@ class _ProfileState extends State<Profile> {
               const SizedBox(
                 height: 16,
               ),
-              TextButton(
-                  onPressed: () async {
-                    await removeToken();
-                    Navigator.pushReplacementNamed(context, 'login');
-                    MotionToast.success(
-                      description: const Text("Logout Successfully"),
-                      title: const Text(
-                        "success",
-                        style: TextStyle(fontSize: 16, color: Colors.green),
-                      ),
-                      toastDuration: const Duration(seconds: 3),
-                    ).show(context);
-                  },
-                  style: Theme.of(context).textButtonTheme.style,
-                  child: const Text("Logout")),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void updateReview(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Positioned(
+            right: -40.0,
+            top: -40.0,
+            child: InkResponse(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: const CircleAvatar(
+                child: Icon(Icons.close),
+                backgroundColor: Colors.red,
+              ),
+            ),
+          ),
+          Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  initialValue: comment,
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: "Add a Comment",
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Colors.red)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Colors.black)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xFF105F49)),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  validator: MultiValidator(
+                      [RequiredValidator(errorText: "* Required Field")]),
+                  minLines: 2,
+                  maxLines: 3,
+                  onSaved: (value) {
+                    newComment = value!;
+                  },
+                ),
+                RatingBar.builder(
+                  initialRating: ratingNo,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (Rating) {
+                    newRating = Rating;
+                  },
+                ),
+                RaisedButton(
+                  child: const Text("Update"),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      String? result =
+                          await changeReview(newComment, newRating);
+                      if (result == 'true') {
+                        Navigator.pop(_scaffoldKey.currentContext!);
+                        setState(() {
+                          futureReview = HttpConnectUser().getReview();
+                        });
+                        MotionToast.success(
+                          description:
+                              const Text("Review Updated Successfully"),
+                          title: const Text(
+                            "Review Updated",
+                            style: TextStyle(fontSize: 16, color: Colors.green),
+                          ),
+                          toastDuration: const Duration(seconds: 3),
+                        ).show(_scaffoldKey.currentContext!);
+                      } else {
+                        Navigator.pop(_scaffoldKey.currentContext!);
+                        MotionToast.error(
+                          description:
+                              const Text("Error while updating review!!!"),
+                          title: const Text(
+                            "Failed!!!",
+                            style: TextStyle(fontSize: 16, color: Colors.red),
+                          ),
+                          toastDuration: const Duration(seconds: 3),
+                        ).show(_scaffoldKey.currentContext!);
+                      }
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+    showDialog(
+      context: _scaffoldKey.currentContext!,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void deleteReview(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Navigator.of(_scaffoldKey.currentContext!).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Continue"),
+      onPressed: () async {
+        String? result = await deleteReviewData();
+        if (result == 'true') {
+          Navigator.of(_scaffoldKey.currentContext!).pop();
+          setState(() {
+            futureReview = HttpConnectUser().getReview();
+          });
+          MotionToast.success(
+            description: const Text("Review Deleted Successfully"),
+            title: const Text(
+              "Review Deleted",
+              style: TextStyle(fontSize: 16, color: Colors.green),
+            ),
+            toastDuration: const Duration(seconds: 3),
+          ).show(context);
+        } else {
+          Navigator.of(_scaffoldKey.currentContext!).pop();
+          MotionToast.error(
+            description: const Text("Could not delete the review"),
+            title: const Text(
+              "error",
+              style: TextStyle(fontSize: 16, color: Colors.red),
+            ),
+            toastDuration: const Duration(seconds: 3),
+          ).show(context);
+        }
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text(
+        "Exit",
+        style: TextStyle(color: Colors.black),
+      ),
+      content: const Text(
+        "Are you Sure You want to exit the app",
+        style: TextStyle(color: Colors.black),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: _scaffoldKey.currentContext!,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

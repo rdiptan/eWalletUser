@@ -28,6 +28,14 @@ class _KYCState extends State<KYC> {
   String? citizenship;
   File? _image;
 
+  late Future<UserDetails> futureProfile;
+
+  @override
+  void initState() {
+    super.initState();
+    futureProfile = HttpConnectUser().getUser();
+  }
+
   Future<void> getImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -120,98 +128,129 @@ class _KYCState extends State<KYC> {
       ),
       body: Form(
         key: _formKey,
-        child: Center(
-          child: Stepper(
-            type: StepperType.vertical,
-            physics: const ScrollPhysics(),
-            currentStep: _currentStep,
-            onStepTapped: (step) => tapped(step),
-            onStepContinue: continued,
-            onStepCancel: cancel,
-            steps: <Step>[
-              Step(
-                title: const Text('Personal Information'),
-                isActive: _currentStep >= 0,
-                state:
-                    _currentStep >= 0 ? StepState.complete : StepState.disabled,
-                content: Column(
-                  children: [
-                    TextFormField(
-                      onSaved: (value) {
-                        phone = value;
-                      },
-                      validator: MultiValidator([
-                        RequiredValidator(errorText: "* Required Field"),
-                        MinLengthValidator(8,
-                            errorText: 'Invalid phone number'),
-                      ]),
-                      decoration:
-                          const InputDecoration(labelText: 'Phone Number'),
-                    ),
-                    TextFormField(
-                      onSaved: (value) {
-                        address = value;
-                      },
-                      validator: MultiValidator([
-                        RequiredValidator(errorText: "* Required Field"),
-                      ]),
-                      decoration: const InputDecoration(labelText: 'Address'),
-                    ),
-                    DateTimePicker(
-                      initialValue: '',
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime(2100),
-                      dateLabelText: 'Date',
-                      onChanged: (val) => print(val),
-                      validator: MultiValidator([
-                        RequiredValidator(errorText: "* Required Field"),
-                      ]),
-                      onSaved: (val) {
-                        dob = val!;
-                      },
-                    ),
-                    TextFormField(
-                      onSaved: (value) {
-                        citizenship = value;
-                      },
-                      validator: MultiValidator([
-                        RequiredValidator(errorText: "* Required Field"),
-                      ]),
-                      decoration: const InputDecoration(
-                          labelText: 'Citizenship Number'),
-                    ),
-                  ],
-                ),
-              ),
-              Step(
-                title: const Text('Document Upload'),
-                isActive: _currentStep >= 1,
-                state:
-                    _currentStep >= 1 ? StepState.complete : StepState.disabled,
-                content: Column(
-                  children: [
-                    const Text("Select an image"),
-                    FlatButton.icon(
-                        onPressed: () async => await getImage(),
-                        icon: const Icon(Icons.upload_file),
-                        label: const Text("Browse")),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _image == null
-                        ? const CircularProgressIndicator()
-                        : Image.file(
-                            _image!,
+        child: Column(
+          children: [
+            Center(
+              child: FutureBuilder<UserDetails>(
+                  future: futureProfile,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Stepper(
+                        type: StepperType.vertical,
+                        physics: const ScrollPhysics(),
+                        currentStep: _currentStep,
+                        onStepTapped: (step) => tapped(step),
+                        onStepContinue: continued,
+                        onStepCancel: cancel,
+                        steps: <Step>[
+                          Step(
+                            title: const Text('Personal Information'),
+                            isActive: _currentStep >= 0,
+                            state: _currentStep >= 0
+                                ? StepState.complete
+                                : StepState.disabled,
+                            content: Column(
+                              children: [
+                                TextFormField(
+                                  initialValue: snapshot.data!.phone != null
+                                      ? "${snapshot.data!.phone}"
+                                      : "",
+                                  onSaved: (value) {
+                                    phone = value;
+                                  },
+                                  validator: MultiValidator([
+                                    RequiredValidator(
+                                        errorText: "* Required Field"),
+                                    MinLengthValidator(8,
+                                        errorText: 'Invalid phone number'),
+                                  ]),
+                                  decoration: const InputDecoration(
+                                      labelText: 'Phone Number'),
+                                ),
+                                TextFormField(
+                                  initialValue: snapshot.data!.address != null
+                                      ? "${snapshot.data!.address}"
+                                      : "",
+                                  onSaved: (value) {
+                                    address = value;
+                                  },
+                                  validator: MultiValidator([
+                                    RequiredValidator(
+                                        errorText: "* Required Field"),
+                                  ]),
+                                  decoration: const InputDecoration(
+                                      labelText: 'Address'),
+                                ),
+                                DateTimePicker(
+                                  initialValue: snapshot.data!.dob != null
+                                      ? (snapshot.data!.dob)
+                                          .toString()
+                                          .substring(0, 10)
+                                      : "",
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime(2100),
+                                  dateLabelText: 'Date',
+                                  onChanged: (val) => print(val),
+                                  validator: MultiValidator([
+                                    RequiredValidator(
+                                        errorText: "* Required Field"),
+                                  ]),
+                                  onSaved: (val) {
+                                    dob = val;
+                                  },
+                                ),
+                                TextFormField(
+                                  initialValue:
+                                      snapshot.data!.citizenship != null
+                                          ? "${snapshot.data!.citizenship}"
+                                          : "",
+                                  onSaved: (value) {
+                                    citizenship = value;
+                                  },
+                                  validator: MultiValidator([
+                                    RequiredValidator(
+                                        errorText: "* Required Field"),
+                                  ]),
+                                  decoration: const InputDecoration(
+                                      labelText: 'Citizenship Number'),
+                                ),
+                              ],
+                            ),
                           ),
-                    // FlatButton.icon(
-                    //     onPressed: () => upload(_image!),
-                    //     icon: const Icon(Icons.upload_rounded),
-                    //     label: const Text("Upload now")),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                          Step(
+                            title: const Text('Document Upload'),
+                            isActive: _currentStep >= 1,
+                            state: _currentStep >= 1
+                                ? StepState.complete
+                                : StepState.disabled,
+                            content: Column(
+                              children: [
+                                const Text("Select an image"),
+                                FlatButton.icon(
+                                    onPressed: () async => await getImage(),
+                                    icon: const Icon(Icons.upload_file),
+                                    label: const Text("Browse")),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                snapshot.data!.citizenshipProof != null
+                                    ? Image.network(
+                                        "http://10.0.2.2:90/${snapshot.data!.citizenshipProof}")
+                                    : _image == null
+                                        ? const CircularProgressIndicator()
+                                        : Image.file(
+                                            _image!,
+                                          ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return const CircularProgressIndicator();
+                  }),
+            ),
+          ],
         ),
       ),
     );

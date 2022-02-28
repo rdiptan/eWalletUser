@@ -280,10 +280,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             },
                           );
                         } else if (snapshot.hasError) {
-                          // return Text("${snapshot.error}");
-                          return const Text("No Transaction Found");
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Image(
+                                  image: AssetImage(
+                                      'images/CurrencyInvestment.png')),
+                              Text("No Transactions Found!!!"),
+                              Text("Please add a new transaction..."),
+                            ],
+                          );
                         }
-                        return const Text("No Transaction Found");
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Image(
+                                image: AssetImage(
+                                    'images/CurrencyInvestment.png')),
+                            Text("No Transactions Found!!!"),
+                            Text("Please add a new transaction..."),
+                          ],
+                        );
                       },
                     ),
                   ),
@@ -361,9 +378,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             },
                           );
                         } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Image(
+                                  image: AssetImage(
+                                      'images/CurrencyInvestment.png')),
+                              Text("No Transactions Found!!!"),
+                              Text("Please add a new transaction..."),
+                            ],
+                          );
                         }
-                        return const Text("No Transaction Found");
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Image(
+                                image: AssetImage(
+                                    'images/CurrencyInvestment.png')),
+                            Text("No Transactions Found!!!"),
+                            Text("Please add a new transaction..."),
+                          ],
+                        );
                       },
                     ),
                   ),

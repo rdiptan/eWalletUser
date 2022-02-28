@@ -151,14 +151,50 @@ class HttpConnectUser {
       "comment": newcomment,
       "rating": newrating,
     };
-    print(reviewMap);
     final response = await http.post(Uri.parse(baseurl + 'review/write'),
         headers: {
           "content-type": "application/json",
           'Authorization': authToken,
         },
         body: jsonEncode(reviewMap));
-    print(response.body);
+    if (jsonDecode(response.body)['success'] == true) {
+      return 'true';
+    } else {
+      var reviewResponse = jsonDecode(response.body);
+      return reviewResponse['msg'];
+    }
+  }
+
+  Future<String?> updateReview(String newcomment, double newrating) async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+
+    Map<String, dynamic> reviewMap = {
+      "comment": newcomment,
+      "rating": newrating,
+    };
+    final response = await http.put(Uri.parse(baseurl + 'review/update'),
+        headers: {
+          "content-type": "application/json",
+          'Authorization': authToken,
+        },
+        body: jsonEncode(reviewMap));
+    if (jsonDecode(response.body)['success'] == true) {
+      return 'true';
+    } else {
+      var reviewResponse = jsonDecode(response.body);
+      return reviewResponse['msg'];
+    }
+  }
+
+  Future<String?> deleteReview() async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+    final response =
+        await http.delete(Uri.parse(baseurl + 'review/delete'), headers: {
+      "content-type": "application/json",
+      'Authorization': authToken,
+    });
     if (jsonDecode(response.body)['success'] == true) {
       return 'true';
     } else {
