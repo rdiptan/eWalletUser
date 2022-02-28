@@ -28,6 +28,10 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  String baseurl = "http://10.0.2.2:90/";
+  // String baseurl = "http://192.168.0.105:90/";
+
   File? _image;
   String newComment = "";
   double newRating = 1;
@@ -92,8 +96,6 @@ class _ProfileState extends State<Profile> {
   }
 
   upload(File imageFile) async {
-    String baseurl = "http://10.0.2.2:90/";
-
     String? futureToken = await loadToken();
     String authToken = 'Bearer $futureToken';
 
@@ -233,7 +235,7 @@ class _ProfileState extends State<Profile> {
                             if (snapshot.data!.user!.image != null) {
                               return CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                    'http://10.0.2.2:90/${snapshot.data!.user!.image}'),
+                                    baseurl + '${snapshot.data!.user!.image}'),
                                 backgroundColor: Theme.of(context).primaryColor,
                                 radius: 40,
                               );
@@ -420,10 +422,10 @@ class _ProfileState extends State<Profile> {
                       var citizenship = snapshot.data!.citizenship != null
                           ? "${snapshot.data!.citizenship}"
                           : "NA";
-                      var citizenshipProof = snapshot.data!.citizenshipProof !=
-                              null
-                          ? "http://10.0.2.2:90/${snapshot.data!.citizenshipProof}"
-                          : 'https://picsum.photos/250?image=9';
+                      var citizenshipProof =
+                          snapshot.data!.citizenshipProof != null
+                              ? baseurl + "${snapshot.data!.citizenshipProof}"
+                              : 'https://picsum.photos/250?image=9';
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Align(
@@ -541,7 +543,7 @@ class _ProfileState extends State<Profile> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             const Text(
-                                              "Add a Review",
+                                              "What do you love about our app?",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20,
@@ -792,7 +794,7 @@ class _ProfileState extends State<Profile> {
                   direction: Axis.horizontal,
                   allowHalfRating: true,
                   itemCount: 5,
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 3.0),
                   itemBuilder: (context, _) => const Icon(
                     Icons.star,
                     color: Colors.amber,

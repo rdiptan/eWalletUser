@@ -286,7 +286,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 16,
                       ),
                       InkWell(
-                        onTap: () => Navigator.pushNamed(context, 'login'),
+                        onTap: () => Navigator.pop(context),
                         child: RichText(
                           text: const TextSpan(children: [
                             WidgetSpan(

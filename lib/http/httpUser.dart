@@ -16,6 +16,7 @@ import 'package:e_wallet/response/transaction_summary_resp.dart';
 
 class HttpConnectUser {
   String baseurl = "http://10.0.2.2:90/";
+  // String baseurl = "http://192.168.0.105:90/";
   static String token = "";
 
   // Creating User -- POST
@@ -200,6 +201,32 @@ class HttpConnectUser {
     } else {
       var reviewResponse = jsonDecode(response.body);
       return reviewResponse['msg'];
+    }
+  }
+
+  Future<String?> changePassword(
+      String old_password, String new_password) async {
+    String? futureToken = await loadToken();
+    String authToken = 'Bearer $futureToken';
+
+    Map<String, dynamic> changePasswordMap = {
+      "old_password": old_password,
+      "new_password": new_password,
+    };
+    final response = await http.put(
+      Uri.parse(baseurl + 'change-password'),
+      headers: {
+        "HttpHeaders.contentTypeHeader": 'application/x-www-form-urlencoded',
+        "content-type": "application/json",
+        'HttpHeaders.Authorization': authToken,
+      },
+      body: jsonEncode(changePasswordMap),
+    );
+    if (jsonDecode(response.body)['success'] == true) {
+      return 'true';
+    } else {
+      var passResponse = jsonDecode(response.body);
+      return passResponse['msg'];
     }
   }
 }

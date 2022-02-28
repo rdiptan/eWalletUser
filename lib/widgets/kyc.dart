@@ -28,6 +28,9 @@ class _KYCState extends State<KYC> {
   String? citizenship;
   File? _image;
 
+  String baseurl = "http://10.0.2.2:90/";
+  // String baseurl = "http://192.168.0.105:90/";
+
   late Future<UserDetails> futureProfile;
 
   @override
@@ -50,8 +53,6 @@ class _KYCState extends State<KYC> {
   }
 
   upload(File imageFile) async {
-    String baseurl = "http://10.0.2.2:90/";
-
     String? futureToken = await loadToken();
     String authToken = 'Bearer $futureToken';
 
@@ -234,8 +235,8 @@ class _KYCState extends State<KYC> {
                                   height: 20,
                                 ),
                                 snapshot.data!.citizenshipProof != null
-                                    ? Image.network(
-                                        "http://10.0.2.2:90/${snapshot.data!.citizenshipProof}")
+                                    ? Image.network(baseurl +
+                                        "${snapshot.data!.citizenshipProof}")
                                     : _image == null
                                         ? const CircularProgressIndicator()
                                         : Image.file(

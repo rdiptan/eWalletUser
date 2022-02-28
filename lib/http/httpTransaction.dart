@@ -13,6 +13,7 @@ import 'package:e_wallet/model/transaction.dart';
 
 class HttpConnectTransaction {
   String baseurl = "http://10.0.2.2:90/";
+  // String baseurl = "http://192.168.0.105:90/";
 
   Future<String?> newTransaction(Transaction transaction) async {
     String? futureToken = await loadToken();
