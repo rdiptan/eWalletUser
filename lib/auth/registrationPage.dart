@@ -82,6 +82,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 32,
                       ),
                       TextFormField(
+                        key: const Key('fname'),
                         onSaved: (value) {
                           fname = value;
                         },
@@ -118,6 +119,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 16,
                       ),
                       TextFormField(
+                        key: const Key('lname'),
                         onSaved: (value) {
                           lname = value;
                         },
@@ -154,6 +156,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 16,
                       ),
                       TextFormField(
+                        key: const Key('email'),
                         onSaved: (value) {
                           email = value;
                         },
@@ -192,12 +195,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 16,
                       ),
                       TextFormField(
+                        key: const Key('password'),
                         onSaved: (value) {
                           password = value;
                         },
                         validator: MultiValidator([
-                          // MinLengthValidator(8,
-                          //     errorText: "Minium 8 Character Required"),
+                          MinLengthValidator(8,
+                              errorText: "Minium 8 Character Required"),
                           RequiredValidator(errorText: "* Required Field")
                         ]),
                         style: Theme.of(context).textTheme.bodyText2,
@@ -242,6 +246,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 16,
                       ),
                       ElevatedButton(
+                        key: const Key('register'),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();

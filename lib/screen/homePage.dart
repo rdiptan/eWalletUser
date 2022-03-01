@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
       _proximityValues = event.getValue();
       if (_proximityValues == true) {
         exit(0);
+        // print('near');
       }
     }));
   }

@@ -80,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 32,
                     ),
                     TextFormField(
+                      key: const Key('email'),
                       onSaved: (value) {
                         email = value;
                       },
@@ -117,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 16,
                     ),
                     TextFormField(
+                      key: const Key('password'),
                       onSaved: (value) {
                         password = value;
                       },
@@ -163,6 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 16,
                     ),
                     ElevatedButton(
+                      key: const Key('login'),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();

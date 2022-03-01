@@ -345,7 +345,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            '${debitData[debitData.length - 1 - index]['to']['fname']} ${debitData[index]['to']['lname']}',
+                                            '${debitData[debitData.length - 1 - index]['to']['fname']} ${debitData[debitData.length - 1 - index]['to']['lname']}',
                                             style: const TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -439,7 +439,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            '${creditData[creditData.length - 1 - index]['from']['fname']} ${creditData[index]['from']['lname']}',
+                                            '${creditData[creditData.length - 1 - index]['from']['fname']} ${creditData[creditData.length - 1 - index]['from']['lname']}',
                                             style: const TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
