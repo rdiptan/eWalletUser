@@ -30,7 +30,7 @@ class HttpConnectUser {
     final response = await http.post(Uri.parse(baseurl + 'user/registration'),
         headers: {"content-type": "application/json"},
         body: jsonEncode(userMap));
-    if (response.statusCode == 200) {
+    if (jsonDecode(response.body)['success'] == true) {
       final loginResponse = await loginUser(user.email!, user.password!);
       if (loginResponse == "true") {
         return 'true';
@@ -52,7 +52,7 @@ class HttpConnectUser {
     final response = await http.post(Uri.parse(baseurl + 'login'),
         headers: {"content-type": "application/json"},
         body: jsonEncode(loginMap));
-    if (response.statusCode == 200) {
+    if (jsonDecode(response.body)['success'] == true) {
       var userResponse = ResponseUser.fromJSON(jsonDecode(response.body));
       token = userResponse.token!;
       assignToken(userResponse.token);
@@ -216,9 +216,10 @@ class HttpConnectUser {
     final response = await http.put(
       Uri.parse(baseurl + 'change-password'),
       headers: {
-        "HttpHeaders.contentTypeHeader": 'application/x-www-form-urlencoded',
-        "content-type": "application/json",
+        // "HttpHeaders.contentTypeHeader": 'application/x-www-form-urlencoded',
+        // "content-type": "application/json",
         'HttpHeaders.Authorization': authToken,
+        // 'Authorization': authToken,
       },
       body: jsonEncode(changePasswordMap),
     );

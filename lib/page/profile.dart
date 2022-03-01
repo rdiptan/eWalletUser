@@ -39,7 +39,7 @@ class _ProfileState extends State<Profile> {
   late Future<UserDetails> futureProfile;
   late Future<Review> futureReview;
 
-  String displayName = "";
+  String displayName = "User";
   String email = "";
   String balance = "";
 
@@ -195,9 +195,9 @@ class _ProfileState extends State<Profile> {
                             displayName = snapshot.data!.user!.lname != null ||
                                     snapshot.data!.user!.lname != null
                                 ? "${snapshot.data!.user!.fname} ${snapshot.data!.user!.lname}"
-                                : "User";
+                                : "displayName";
                           } else if (snapshot.hasError) {
-                            return Text("${snapshot.error}");
+                            return const Text("User");
                           }
                           return Text(displayName);
                         },
@@ -342,7 +342,7 @@ class _ProfileState extends State<Profile> {
                               ? "${snapshot.data!.balance}"
                               : "NA";
                         } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
+                          return const Text("Connect to Internet");
                         }
                         return Column(
                           children: [

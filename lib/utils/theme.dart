@@ -14,7 +14,7 @@ class ThemeProvider extends ChangeNotifier {
     textTheme: const TextTheme(
       bodyText1: TextStyle(
           color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
-      bodyText2: TextStyle(color: Color(0xFF15102E), fontSize: 18),
+      bodyText2: TextStyle(color: Colors.grey, fontSize: 18),
       headline1: TextStyle(
           color: Color(0xFF000000), fontWeight: FontWeight.w700, fontSize: 32),
     ),
@@ -52,7 +52,7 @@ class ThemeProvider extends ChangeNotifier {
     textTheme: const TextTheme(
       bodyText1: TextStyle(
           color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
-      bodyText2: TextStyle(color: Color(0xFF15102E), fontSize: 18),
+      bodyText2: TextStyle(color: Colors.black, fontSize: 18),
       headline1: TextStyle(
           color: Color(0xFF105F49), fontWeight: FontWeight.w700, fontSize: 32),
     ),

@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -254,15 +255,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             String? registered = await registerUser(user);
                             if (registered == "true") {
                               Navigator.pushReplacementNamed(context, 'home');
-                              MotionToast.success(
-                                description: Text(registered!),
-                                title: const Text(
-                                  "success",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.green),
-                                ),
-                                toastDuration: const Duration(seconds: 3),
-                              ).show(context);
+                              AwesomeNotifications().createNotification(
+                                  content: NotificationContent(
+                                id: 4,
+                                channelKey: 'eWallet',
+                                title: 'Welcome to eWallet',
+                                body: 'User registered by $email.',
+                              ));
                             } else {
                               MotionToast.error(
                                 description: Text(registered!),

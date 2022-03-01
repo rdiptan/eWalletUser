@@ -56,7 +56,7 @@ class _TransactionPageState extends State<TransactionPage> {
           backgroundColor: Colors.transparent,
           centerTitle: true,
           title: Container(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: MediaQuery.of(context).size.height * 0.125,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
@@ -69,7 +69,7 @@ class _TransactionPageState extends State<TransactionPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Total Balance"),
+                const Text("Current Balance"),
                 const SizedBox(height: 10),
                 FutureBuilder<TransactionSummary>(
                   future: futureSummary,
@@ -79,7 +79,15 @@ class _TransactionPageState extends State<TransactionPage> {
                           ? "${snapshot.data!.balance}"
                           : "NA";
                     } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
+                      return Column(
+                        children: const [
+                          Text("NA"),
+                          Text(
+                            "New transaction is not available right now...",
+                            textScaleFactor: 0.9,
+                          ),
+                        ],
+                      );
                     }
                     return Text("Rs.$balance");
                   },
@@ -289,7 +297,7 @@ class _TransactionPageState extends State<TransactionPage> {
                           channelKey: 'eWallet',
                           title: 'Transaction Failed',
                           body:
-                              'Transaction of Rs.$amount to $email is failed!!!',
+                              'Transaction of Rs.$amount to $email is failed due to $sendmoney',
                         ));
                       }
                     }
