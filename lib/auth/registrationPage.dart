@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -50,6 +51,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           overflow: Overflow.visible,
           clipBehavior: Clip.antiAliasWithSaveLayer,
           fit: StackFit.loose,
+          alignment: Alignment.center,
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
@@ -253,15 +255,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             String? registered = await registerUser(user);
                             if (registered == "true") {
                               Navigator.pushReplacementNamed(context, 'home');
-                              MotionToast.success(
-                                description: Text(registered!),
-                                title: const Text(
-                                  "success",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.green),
-                                ),
-                                toastDuration: const Duration(seconds: 3),
-                              ).show(context);
+                              AwesomeNotifications().createNotification(
+                                  content: NotificationContent(
+                                id: 4,
+                                channelKey: 'eWallet',
+                                title: 'Welcome to eWallet',
+                                body: 'User registered by $email.',
+                              ));
                             } else {
                               MotionToast.error(
                                 description: Text(registered!),
@@ -285,7 +285,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         height: 16,
                       ),
                       InkWell(
-                        onTap: () => Navigator.pushNamed(context, 'login'),
+                        onTap: () => Navigator.pop(context),
                         child: RichText(
                           text: const TextSpan(children: [
                             WidgetSpan(
@@ -311,7 +311,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             Positioned(
                 top: -(MediaQuery.of(context).size.height / 4.75),
-                left: (MediaQuery.of(context).size.height / 15),
+                // left: (MediaQuery.of(context).size.height / 15),
                 child: Image.asset(
                   'images/CurrencySecure.png',
                   fit: BoxFit.contain,

@@ -1,9 +1,15 @@
 // ignore_for_file: file_names
 
+import 'dart:io';
+import 'package:e_wallet/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:e_wallet/page/home.dart';
 import 'package:e_wallet/page/profile.dart';
 import 'package:e_wallet/page/transactionPage.dart';
+import 'package:provider/provider.dart';
+import 'package:shake/shake.dart';
+import 'package:all_sensors2/all_sensors2.dart';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,6 +25,32 @@ class _HomePageState extends State<HomePage> {
     const TransactionPage(),
     const Profile(),
   ];
+
+  bool _proximityValues = false;
+  final List<StreamSubscription<dynamic>> _streamSubscriptions =
+      <StreamSubscription<dynamic>>[];
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (StreamSubscription<dynamic> subscription in _streamSubscriptions) {
+      subscription.cancel();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ShakeDetector detector = ShakeDetector.autoStart(onPhoneShake: () {
+      Provider.of<ThemeProvider>(context, listen: false).swapTheme();
+    });
+    _streamSubscriptions.add(proximityEvents!.listen((ProximityEvent event) {
+      _proximityValues = event.getValue();
+      if (_proximityValues == true) {
+        exit(0);
+      }
+    }));
+  }
 
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = const Home();

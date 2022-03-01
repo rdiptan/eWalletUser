@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -48,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         overflow: Overflow.visible,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         fit: StackFit.loose,
+        alignment: Alignment.center,
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
@@ -167,15 +169,13 @@ class _LoginPageState extends State<LoginPage> {
                           String? loggedin = await loginUser(email!, password!);
                           if (loggedin == "true") {
                             Navigator.pushReplacementNamed(context, 'home');
-                            MotionToast.success(
-                              description: Text(loggedin!),
-                              title: const Text(
-                                "success",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.green),
-                              ),
-                              toastDuration: const Duration(seconds: 3),
-                            ).show(context);
+                            AwesomeNotifications().createNotification(
+                                content: NotificationContent(
+                              id: 3,
+                              channelKey: 'eWallet',
+                              title: 'Welcome Back!!!',
+                              body: 'User loggedin by $email.',
+                            ));
                           } else {
                             MotionToast.error(
                               description: Text(loggedin!),
@@ -226,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
           Positioned(
             // top: -160,
             top: -(MediaQuery.of(context).size.height / 4.75),
-            left: (MediaQuery.of(context).size.height / 15),
+            // left: (MediaQuery.of(context).size.height / 15),
             child: Image.asset(
               'images/Currency.png',
               fit: BoxFit.contain,

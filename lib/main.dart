@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-// void main() => runApp(const MyApp());
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -25,6 +26,7 @@ void main() async {
             enableVibration: true)
       ]);
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   SharedPreferences.getInstance().then((prefs) {
     var isDarkTheme = prefs.getBool("darkTheme") ?? false;
     return runApp(

@@ -1,9 +1,10 @@
+import 'package:e_wallet/http/httpUser.dart';
+import 'package:e_wallet/model/transactionSummary.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:e_wallet/http/httpTransaction.dart';
 import 'package:e_wallet/model/transaction.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:motion_toast/motion_toast.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -14,6 +15,9 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
+  late Future<TransactionSummary> futureSummary;
+  String balance = "";
+
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? amount;
@@ -34,6 +38,12 @@ class _TransactionPageState extends State<TransactionPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    futureSummary = HttpConnectUser().getTransactionSummary();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -46,7 +56,7 @@ class _TransactionPageState extends State<TransactionPage> {
           backgroundColor: Colors.transparent,
           centerTitle: true,
           title: Container(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: MediaQuery.of(context).size.height * 0.125,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
@@ -58,10 +68,30 @@ class _TransactionPageState extends State<TransactionPage> {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text("Total Balance"),
-                SizedBox(height: 10),
-                Text("Rs. 45,000"),
+              children: [
+                const Text("Current Balance"),
+                const SizedBox(height: 10),
+                FutureBuilder<TransactionSummary>(
+                  future: futureSummary,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      balance = snapshot.data!.balance != null
+                          ? "${snapshot.data!.balance}"
+                          : "NA";
+                    } else if (snapshot.hasError) {
+                      return Column(
+                        children: const [
+                          Text("NA"),
+                          Text(
+                            "New transaction is not available right now...",
+                            textScaleFactor: 0.9,
+                          ),
+                        ],
+                      );
+                    }
+                    return Text("Rs.$balance");
+                  },
+                ),
               ],
             ),
           ),
@@ -83,11 +113,12 @@ class _TransactionPageState extends State<TransactionPage> {
             key: _formKey,
             child: Column(
               children: [
-                const Text(
+                Text(
                   'New Transaction',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 const SizedBox(
@@ -167,9 +198,8 @@ class _TransactionPageState extends State<TransactionPage> {
                   onSaved: (value) {
                     category = value as String?;
                   },
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: "* Required Field"),
-                  ]),
+                  validator: (value) =>
+                      value == null ? '* Required Field' : null,
                   style: Theme.of(context).textTheme.bodyText2,
                   dropdownColor: const Color(0xFF105F49),
                   decoration: InputDecoration(
@@ -267,7 +297,7 @@ class _TransactionPageState extends State<TransactionPage> {
                           channelKey: 'eWallet',
                           title: 'Transaction Failed',
                           body:
-                              'Transaction of Rs.$amount to $email is failed!!!',
+                              'Transaction of Rs.$amount to $email is failed due to $sendmoney',
                         ));
                       }
                     }

@@ -10,11 +10,11 @@ class ThemeProvider extends ChangeNotifier {
     scaffoldBackgroundColor: const Color(0xFF000000),
     primaryColor: const Color(0xFF000000),
     accentColor: const Color(0xFFF6F6F6),
-    canvasColor: const Color(0xFFE9FFAC),
+    canvasColor: const Color(0xFF000000),
     textTheme: const TextTheme(
       bodyText1: TextStyle(
           color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
-      bodyText2: TextStyle(color: Color(0xFF15102E), fontSize: 18),
+      bodyText2: TextStyle(color: Colors.grey, fontSize: 18),
       headline1: TextStyle(
           color: Color(0xFF000000), fontWeight: FontWeight.w700, fontSize: 32),
     ),
@@ -48,11 +48,11 @@ class ThemeProvider extends ChangeNotifier {
     // primaryColor: const Color(0xFF337762),
     primaryColor: const Color(0xFF105F49),
     accentColor: const Color(0xFFF6F6F6),
-    canvasColor: const Color(0xFFE9FFAC),
+    canvasColor: const Color(0xFF337762),
     textTheme: const TextTheme(
       bodyText1: TextStyle(
           color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
-      bodyText2: TextStyle(color: Color(0xFF15102E), fontSize: 18),
+      bodyText2: TextStyle(color: Colors.black, fontSize: 18),
       headline1: TextStyle(
           color: Color(0xFF105F49), fontWeight: FontWeight.w700, fontSize: 32),
     ),

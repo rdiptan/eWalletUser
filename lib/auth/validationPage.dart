@@ -44,7 +44,9 @@ class _ValidationScreenState extends State<ValidationPage> {
       });
     } else {
       Future.delayed(Duration.zero, () {
-        Navigator.pushReplacementNamed(context, 'home');
+        // Navigator.pushReplacementNamed(context, 'home');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('home', (Route<dynamic> route) => false);
       });
     }
     return Scaffold(
