@@ -65,7 +65,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
               child: SingleChildScrollView(
                 padding:
-                    EdgeInsets.all(MediaQuery.of(context).size.height / 32),
+                    EdgeInsets.all(MediaQuery.of(context).size.height / 30),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -76,10 +76,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       Text(
                         "Registration",
+                        textScaleFactor:
+                            MediaQuery.of(context).size.height > 800 ? 1.5 : 1,
                         style: Theme.of(context).textTheme.headline1,
                       ),
-                      const SizedBox(
-                        height: 32,
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.height / 25),
                       ),
                       TextFormField(
                         key: const Key('fname'),
@@ -115,8 +117,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.height / 40),
                       ),
                       TextFormField(
                         key: const Key('lname'),
@@ -152,8 +154,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.height / 40),
                       ),
                       TextFormField(
                         key: const Key('email'),
@@ -191,8 +193,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.height / 40),
                       ),
                       TextFormField(
                         key: const Key('password'),
@@ -242,8 +244,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.height / 40),
                       ),
                       ElevatedButton(
                         key: const Key('register'),
@@ -283,11 +285,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         style: Theme.of(context).elevatedButtonTheme.style,
                         child: Text(
                           "Registration",
+                          textScaleFactor:
+                              MediaQuery.of(context).size.height > 800
+                                  ? 1.5
+                                  : 1,
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
+                      SizedBox(
+                        height: (MediaQuery.of(context).size.height / 40),
                       ),
                       InkWell(
                         onTap: () => Navigator.pop(context),

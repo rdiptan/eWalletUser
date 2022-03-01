@@ -62,22 +62,24 @@ class _LoginPageState extends State<LoginPage> {
               color: Theme.of(context).accentColor,
             ),
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(MediaQuery.of(context).size.height / 32),
+              padding: EdgeInsets.all(MediaQuery.of(context).size.height / 30),
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Image(image: AssetImage('images/Currency.png')),
-                    const SizedBox(
-                      height: 32,
+                    SizedBox(
+                      height: (MediaQuery.of(context).size.height / 25),
                     ),
                     Text(
                       "Login",
+                      textScaleFactor:
+                          MediaQuery.of(context).size.height > 800 ? 1.5 : 1,
                       style: Theme.of(context).textTheme.headline1,
                     ),
-                    const SizedBox(
-                      height: 32,
+                    SizedBox(
+                      height: (MediaQuery.of(context).size.height / 25),
                     ),
                     TextFormField(
                       key: const Key('email'),
@@ -114,8 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
+                    SizedBox(
+                      height: (MediaQuery.of(context).size.height / 40),
                     ),
                     TextFormField(
                       key: const Key('password'),
@@ -161,8 +163,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
+                    SizedBox(
+                      height: (MediaQuery.of(context).size.height / 40),
                     ),
                     ElevatedButton(
                       key: const Key('login'),
@@ -195,11 +197,13 @@ class _LoginPageState extends State<LoginPage> {
                       style: Theme.of(context).elevatedButtonTheme.style,
                       child: Text(
                         "Login",
+                        textScaleFactor:
+                            MediaQuery.of(context).size.height > 800 ? 1.5 : 1,
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
+                    SizedBox(
+                      height: (MediaQuery.of(context).size.height / 40),
                     ),
                     InkWell(
                       onTap: () => Navigator.pushNamed(context, 'registration'),

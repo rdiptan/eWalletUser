@@ -121,8 +121,8 @@ class _TransactionPageState extends State<TransactionPage> {
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+                SizedBox(
+                  height: (MediaQuery.of(context).size.height / 40),
                 ),
                 // const Padding(
                 //   padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
@@ -160,8 +160,8 @@ class _TransactionPageState extends State<TransactionPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 16,
+                SizedBox(
+                  height: (MediaQuery.of(context).size.height / 40),
                 ),
                 TextFormField(
                   onSaved: (value) {
@@ -191,8 +191,8 @@ class _TransactionPageState extends State<TransactionPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 16,
+                SizedBox(
+                  height: (MediaQuery.of(context).size.height / 40),
                 ),
                 DropdownButtonFormField(
                   onSaved: (value) {
@@ -234,8 +234,8 @@ class _TransactionPageState extends State<TransactionPage> {
                     });
                   },
                 ),
-                const SizedBox(
-                  height: 16,
+                SizedBox(
+                  height: (MediaQuery.of(context).size.height / 40),
                 ),
                 TextFormField(
                   onSaved: (value) {
@@ -264,8 +264,8 @@ class _TransactionPageState extends State<TransactionPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 16,
+                SizedBox(
+                  height: (MediaQuery.of(context).size.height / 40),
                 ),
                 ConfirmationSlider(
                   onConfirmation: () async {
