@@ -7,6 +7,7 @@ import 'package:e_wallet/model/transactionSummary.dart';
 import 'package:e_wallet/model/user.dart';
 import 'package:e_wallet/model/userDetails.dart';
 import 'package:e_wallet/response/review_data_resp.dart';
+import 'package:e_wallet/utils/base_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:e_wallet/utils/load_token.dart';
@@ -15,8 +16,8 @@ import 'package:e_wallet/response/user_data_resp.dart';
 import 'package:e_wallet/response/transaction_summary_resp.dart';
 
 class HttpConnectUser {
-  String baseurl = "http://10.0.2.2:90/";
-  // String baseurl = "http://192.168.0.105:90/";
+  String baseurl = baseURL();
+
   static String token = "";
 
   // Creating User -- POST

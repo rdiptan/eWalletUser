@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:async/async.dart';
 import 'package:e_wallet/model/review.dart';
+import 'package:e_wallet/utils/base_url.dart';
 import 'package:e_wallet/widgets/drawer.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
@@ -29,8 +30,7 @@ class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String baseurl = "http://10.0.2.2:90/";
-  // String baseurl = "http://192.168.0.105:90/";
+  String baseurl = baseURL();
 
   File? _image;
   String newComment = "";

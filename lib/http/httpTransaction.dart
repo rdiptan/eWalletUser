@@ -7,13 +7,13 @@ import 'package:e_wallet/model/tranactionDetails.dart';
 import 'package:e_wallet/response/transaction_details_credit_resp.dart';
 import 'package:e_wallet/response/transaction_details_debit_resp.dart';
 import 'package:e_wallet/response/transaction_history_resp.dart';
+import 'package:e_wallet/utils/base_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_wallet/utils/load_token.dart';
 import 'package:e_wallet/model/transaction.dart';
 
 class HttpConnectTransaction {
-  String baseurl = "http://10.0.2.2:90/";
-  // String baseurl = "http://192.168.0.105:90/";
+  String baseurl = baseURL();
 
   Future<String?> newTransaction(Transaction transaction) async {
     String? futureToken = await loadToken();
